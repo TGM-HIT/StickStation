@@ -13,6 +13,7 @@ final class StickController {
     var completed = 0
     private var activeIDs: Set<String> = []
     private var refreshGeneration = 0
+    var backupOnly = false
 
     var selectedCount: Int { sticks.filter { $0.selected && $0.phase == .todo }.count }
 
@@ -35,6 +36,7 @@ final class StickController {
         let volumes = await Task.detached { StickWorker.discover() }.value
         guard generation == refreshGeneration else { return }
         reconcile(volumes)
+
     }
 
     // Keep processing rows stable while formatting temporarily changes a volume's UUID.
@@ -77,15 +79,16 @@ final class StickController {
         activeIDs = Set(batch.map(\.id))
         running = true
         completed = 0
-        let source = source
-        let format = format
+        let backupOnly = backupOnly
+        let source = backupOnly ? nil : source
+        let format = !backupOnly && format
         for row in batch { set(row.id, phase: .working, detail: "Copying and verifying…", backup: nil) }
         Task {
             await withTaskGroup(of: Void.self) { group in
                 for row in batch {
                     group.addTask {
                         do {
-                            try await StickWorker().process(row.volume, backupRoot: backupRoot, source: source, format: format) { phase, detail, backup in
+                            try await StickWorker().process(row.volume, backupRoot: backupRoot, source: source, format: format, backupOnly: backupOnly) { phase, detail, backup in
                                 await self.set(row.id, phase: phase, detail: detail, backup: backup)
                             }
                         } catch {
@@ -130,7 +133,7 @@ struct ContentView: View {
                 HStack(spacing: 12) {
                     SummaryTile(title: "To do", count: model.sticks.filter { $0.phase == .todo }.count, icon: "circle.dashed", color: .secondary)
                     SummaryTile(title: "In process", count: model.sticks.filter { $0.phase == .working || $0.phase == .saved }.count, icon: "arrow.triangle.2.circlepath", color: accent)
-                    SummaryTile(title: "Reset", count: model.sticks.filter { $0.phase == .reset || $0.phase == .ejected }.count, icon: "checkmark.circle.fill", color: .green)
+                    SummaryTile(title: "Completed", count: model.sticks.filter { $0.phase == .reset || $0.phase == .ejected || $0.phase == .backedUp }.count, icon: "checkmark.circle.fill", color: .green)
                 }
                 HStack {
                     Text("Connected sticks & recent results").font(.title3.weight(.semibold))
@@ -177,12 +180,14 @@ struct ContentView: View {
         .task { await model.observeVolumes(named: NSWorkspace.didMountNotification) }
         .task { await model.observeVolumes(named: NSWorkspace.didUnmountNotification) }
         .task { await model.observeVolumes(named: NSWorkspace.didRenameVolumeNotification) }
-        .confirmationDialog("Back up and reset \(model.selectedCount) sticks?", isPresented: $confirm, titleVisibility: .visible) {
-            Button(role: .destructive) { model.start() } label: {
-                Text(model.format ? LocalizedStringResource("Back up & format") : LocalizedStringResource("Back up & reset"))
+        .confirmationDialog(model.backupOnly ? Text("Back up \(model.selectedCount) sticks?") : Text("Back up and reset \(model.selectedCount) sticks?"), isPresented: $confirm, titleVisibility: .visible) {
+            Button(role: model.backupOnly ? nil : .destructive) { model.start() } label: {
+                Text(model.backupOnly ? LocalizedStringResource("Back up only") : model.format ? LocalizedStringResource("Back up & format") : LocalizedStringResource("Back up & reset"))
             }
         } message: {
-            if model.format {
+            if model.backupOnly {
+                Text("Abgabe and all root files will be copied and verified. Other folders are not backed up. No files on the sticks will be changed. Sticks remain mounted after backup.")
+            } else if model.format {
                 Text("Abgabe and all root files will be copied and verified. Then ALL data on the selected sticks will be deleted by formatting as FAT32. Angabe and Abgabe will be recreated. Other folders are not backed up. Sticks will be ejected automatically after reset. Keep them connected until “Safe to remove” appears.")
             } else {
                 Text("Abgabe and all root files will be copied and verified. Then ALL data on the selected sticks will be deleted. Angabe and Abgabe will be recreated. Other folders are not backed up. Sticks will be ejected automatically after reset. Keep them connected until “Safe to remove” appears.")
@@ -217,11 +222,24 @@ private struct SetupSidebar: View {
                 Text("BATCH SETUP").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
                 FolderSetting(title: "Backup directory", subtitle: "Required · one folder per stick", url: model.backupRoot, icon: "archivebox", action: { model.chooseFolder(assignment: false) })
                 FolderSetting(title: "Assignment source", subtitle: "Optional · copied into Angabe", url: model.source, icon: "folder.badge.plus", action: { model.chooseFolder(assignment: true) })
+                    .disabled(model.backupOnly)
                 if model.source != nil {
                     Button("Clear assignment source") { model.source = nil }.font(.caption)
                 }
                 Divider()
-                Toggle("Format as FAT32", isOn: $model.format).toggleStyle(.switch)
+                Toggle(isOn: $model.backupOnly) {
+                    Text("Back up only")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .toggleStyle(.switch)
+                Text("Copy and verify Abgabe and root files without changing the stick. Sticks remain mounted.")
+                    .font(.caption).foregroundStyle(.secondary)
+                Toggle(isOn: $model.format) {
+                    Text("Format as FAT32")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .toggleStyle(.switch)
+                    .disabled(model.backupOnly)
                 Text("Off: clear files and keep the existing format. On: reformat the USB volume.")
                     .font(.caption).foregroundStyle(.secondary)
             }.disabled(model.running)
@@ -232,7 +250,7 @@ private struct SetupSidebar: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             .padding(14).background(.background.opacity(0.65), in: RoundedRectangle(cornerRadius: 12))
-            Text("Up to 16 sticks · automatic ejection").font(.caption).foregroundStyle(.secondary)
+            Text(model.backupOnly ? LocalizedStringResource("Up to 16 sticks · backup only") : LocalizedStringResource("Up to 16 sticks · automatic ejection")).font(.caption).foregroundStyle(.secondary)
         }
         .padding(22)
         .background(Color(nsColor: .controlBackgroundColor))
@@ -323,7 +341,7 @@ private struct StickCard: View {
         switch row.phase {
         case .todo: return .secondary
         case .working, .saved: return accent
-        case .reset, .ejected: return .green
+        case .reset, .ejected, .backedUp: return .green
         case .failed: return .orange
         }
     }
@@ -331,7 +349,7 @@ private struct StickCard: View {
         switch row.phase {
         case .todo: return "circle.dashed"
         case .working: return "arrow.triangle.2.circlepath"
-        case .saved: return "checkmark.shield.fill"
+        case .saved, .backedUp: return "checkmark.shield.fill"
         case .reset: return "checkmark.circle.fill"
         case .ejected: return "eject.circle.fill"
         case .failed: return "exclamationmark.triangle.fill"
@@ -401,7 +419,7 @@ private struct BatchFooter: View {
             Button {
                 confirm = true
             } label: {
-                Label("Back up & reset", systemImage: "arrow.right")
+                Label { Text(model.backupOnly ? LocalizedStringResource("Back up only") : LocalizedStringResource("Back up & reset")) } icon: { Image(systemName: "arrow.right") }
                     .padding(.horizontal, 12).padding(.vertical, 8)
             }
             .buttonStyle(.borderedProminent)

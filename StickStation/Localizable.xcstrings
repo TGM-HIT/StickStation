@@ -109,6 +109,16 @@
         }
       }
     },
+    "Abgabe and all root files will be copied and verified. Other folders are not backed up. No files on the sticks will be changed. Sticks remain mounted after backup." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Abgabe und alle Dateien im Stammverzeichnis werden kopiert und überprüft. Andere Ordner werden nicht gesichert. Auf den Sticks werden keine Dateien geändert. Die Sticks bleiben nach der Sicherung eingebunden."
+          }
+        }
+      }
+    },
     "Abgabe and all root files will be copied and verified. Then ALL data on the selected sticks will be deleted by formatting as FAT32. Angabe and Abgabe will be recreated. Other folders are not backed up. Sticks will be ejected automatically after reset. Keep them connected until “Safe to remove” appears." : {
       "localizations" : {
         "de" : {
@@ -169,6 +179,58 @@
         }
       }
     },
+    "Back up %lld sticks?" : {
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld Stick sichern?"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld Sticks sichern?"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld Sticks sichern?"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "Back up %lld stick?"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "Back up %lld sticks?"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "Back up %lld sticks?"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Back up and reset %lld sticks?" : {
       "localizations" : {
         "de" : {
@@ -221,12 +283,32 @@
         }
       }
     },
+    "Back up only" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nur sichern"
+          }
+        }
+      }
+    },
     "BACK UP. RESET. REPEAT." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "SICHERN. ZURÜCKSETZEN. WIEDERHOLEN."
+          }
+        }
+      }
+    },
+    "Backed up" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gesichert"
           }
         }
       }
@@ -267,6 +349,16 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Sicherung überprüft"
+          }
+        }
+      }
+    },
+    "Backup verified • stick unchanged" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sicherung überprüft • Stick unverändert"
           }
         }
       }
@@ -437,6 +529,16 @@
         }
       }
     },
+    "Completed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Abgeschlossen"
+          }
+        }
+      }
+    },
     "Connect your USB hub. Sticks labeled HIT A01 through HIT D40 will appear here automatically." : {
       "localizations" : {
         "de" : {
@@ -453,6 +555,16 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Verbundene Sticks & letzte Ergebnisse"
+          }
+        }
+      }
+    },
+    "Copy and verify Abgabe and root files without changing the stick. Sticks remain mounted." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Abgabe und Dateien im Stammverzeichnis werden kopiert und überprüft, ohne den Stick zu verändern. Die Sticks bleiben eingebunden."
           }
         }
       }
@@ -797,6 +909,9 @@
         }
       }
     },
+    "The Spotlight exclusion marker is not a regular file." : {
+
+    },
     "The USB device changed before ejection." : {
       "localizations" : {
         "de" : {
@@ -843,6 +958,16 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Bis zu 16 Sticks · automatisches Auswerfen"
+          }
+        }
+      }
+    },
+    "Up to 16 sticks · backup only" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Bis zu 16 Sticks · nur sichern"
           }
         }
       }
@@ -896,6 +1021,9 @@
           }
         }
       }
+    },
+    "Volume name does not match a managed HIT stick." : {
+
     }
   },
   "version" : "1.3"

@@ -26,13 +26,14 @@ struct StickVolume: Identifiable, Sendable {
 }
 
 enum StickPhase: Sendable {
-    case todo, working, saved, reset, ejected, failed
+    case todo, working, saved, reset, ejected, backedUp, failed
 
     var title: LocalizedStringResource {
         switch self {
         case .todo: "To do"
         case .working: "In process"
         case .saved: "Saved"
+        case .backedUp: "Backed up"
         case .reset: "Reset"
         case .ejected: "Ejected"
         case .failed: "Needs attention"
@@ -71,9 +72,60 @@ actor OperationLog {
     }
 }
 
+/// Holds one ejection slot across suspension points, including retries.
+/// Actor isolation alone would allow another eject to enter while the first awaits macOS.
+private actor EjectionQueue {
+    static let shared = EjectionQueue()
+    private var occupied = false
+    private var waiters: [CheckedContinuation<Void, Never>] = []
+
+    func perform(_ operation: @Sendable () async throws -> Void) async throws {
+        if occupied {
+            await withCheckedContinuation { waiters.append($0) }
+        } else {
+            occupied = true
+        }
+        defer {
+            if waiters.isEmpty {
+                occupied = false
+            } else {
+                waiters.removeFirst().resume()
+            }
+        }
+        try Task.checkCancellation()
+        try await operation()
+    }
+}
+
 /// One worker per stick allows independent I/O without blocking the interface.
 actor StickWorker {
     private let fm = FileManager.default
+    static let spotlightWorker = StickWorker()
+
+    private static let spotlightMarkerName = ".metadata_never_index"
+
+    private func ensureSpotlightMarker(on volume: StickVolume) throws {
+        _ = try validate(volume)
+        let marker = volume.url.appendingPathComponent(Self.spotlightMarkerName)
+        if let attributes = try? fm.attributesOfItem(atPath: marker.path) {
+            guard attributes[.type] as? FileAttributeType == .typeRegular else {
+                throw StickError.message("The Spotlight exclusion marker is not a regular file.")
+            }
+            if (attributes[.size] as? NSNumber)?.intValue == 0 { return }
+        }
+        // Atomic replacement avoids following a link when writing the marker.
+        try Data().write(to: marker, options: .atomic)
+    }
+
+    /// Initialize Spotlight exclusion without administrator authorization.
+    func prepareSpotlightMarkers(on volumes: [StickVolume]) throws {
+        for volume in volumes {
+            guard Self.validLabel(volume.name) else {
+                throw StickError.message("Volume name does not match a managed HIT stick.")
+            }
+            try ensureSpotlightMarker(on: volume)
+        }
+    }
 
     static func validLabel(_ name: String) -> Bool {
         name.range(of: #"^HIT [ABCD](0[1-9]|[1-3][0-9]|40)$"#, options: .regularExpression) != nil
@@ -142,26 +194,35 @@ actor StickWorker {
         return disks.contains(wholeDisk)
     }
 
-    private func eject(_ volume: StickVolume, device: String) async throws {
+    private func eject(_ volume: StickVolume, device: String,
+                       log: @Sendable (String) async throws -> Void) async throws {
+        // All app-owned file operations and handles have finished before entering this queue.
+        try await Task.sleep(for: .seconds(2))
         let identity = try info(device)
         guard let wholeDisk = identity["ParentWholeDisk"] as? String else {
             throw StickError.message("Cannot identify the USB disk for ejection.")
         }
-        for attempt in 0..<3 {
+        for attempt in 0..<5 {
+            try Task.checkCancellation()
             guard try validate(volume) == device else {
                 throw StickError.message("The USB device changed before ejection.")
             }
             do {
-                try await fm.unmountVolume(at: volume.url, options: [.allPartitionsAndEjectDisk])
+                try await log("Ejection attempt \(attempt + 1) of 5")
+                try await fm.unmountVolume(at: volume.url, options: [.allPartitionsAndEjectDisk, .withoutUI])
                 return
             } catch {
                 let ejectionError = error
+                let nsError = error as NSError
+                let blockingProcess = nsError.userInfo[NSFileManagerUnmountDissentingProcessIdentifierErrorKey]
+                try await log("Ejection failed: \(nsError.domain) \(nsError.code); \(nsError.localizedDescription); blocking process ID: \(blockingProcess.map { String(describing: $0) } ?? "not reported")")
                 // Allow Disk Arbitration to finish updating after a format/eject.
                 for _ in 0..<3 {
                     try await Task.sleep(for: .milliseconds(500))
                     if try !diskIsPresent(wholeDisk) { return }
                 }
-                guard attempt < 2 else { throw ejectionError }
+                guard attempt < 4 else { throw ejectionError }
+                try await Task.sleep(for: .seconds(2 * (attempt + 1)))
                 // Only retry while the same volume is still mounted.
                 guard (try? validate(volume)) == device else { throw ejectionError }
             }
@@ -257,10 +318,10 @@ actor StickWorker {
         }
     }
 
-    func process(_ volume: StickVolume, backupRoot: URL, source: URL?, format: Bool,
+    func process(_ volume: StickVolume, backupRoot: URL, source: URL?, format: Bool, backupOnly: Bool = false,
                  update: @escaping @Sendable (StickPhase, LocalizedStringResource, URL?) async -> Void) async throws {
         do {
-            try await processAndEject(volume, backupRoot: backupRoot, source: source, format: format, update: update)
+            try await processAndEject(volume, backupRoot: backupRoot, source: backupOnly ? nil : source, format: format, backupOnly: backupOnly, update: update)
         } catch {
             let operationError = error
             do {
@@ -273,9 +334,9 @@ actor StickWorker {
         }
     }
 
-    private func processAndEject(_ volume: StickVolume, backupRoot: URL, source: URL?, format: Bool,
+    private func processAndEject(_ volume: StickVolume, backupRoot: URL, source: URL?, format: Bool, backupOnly: Bool,
                                 update: @escaping @Sendable (StickPhase, LocalizedStringResource, URL?) async -> Void) async throws {
-        let log: (String) async throws -> Void = { message in
+        let log: @Sendable (String) async throws -> Void = { message in
             try await OperationLog.shared.append(in: backupRoot, stick: volume.name, message: message)
         }
         let device = try validate(volume)
@@ -294,7 +355,7 @@ actor StickWorker {
                 throw StickError.message("The backup directory cannot be inside the assignment source.")
             }
         }
-        try await log("Started. UUID: \(volume.id); mode: \(format ? "FAT32 format" : "clear files"); assignment: \(source?.path ?? "none")")
+        try await log("Started. UUID: \(volume.id); mode: \(backupOnly ? "backup only" : format ? "FAT32 format" : "clear files"); assignment: \(source?.path ?? "none")")
         let stamp = ISO8601DateFormatter().string(from: Date()).replacingOccurrences(of: ":", with: "-")
         let destination = backupRoot.appendingPathComponent("\(volume.name)_\(stamp)_\(UUID().uuidString.prefix(8))")
         try fm.createDirectory(at: destination, withIntermediateDirectories: false)
@@ -332,6 +393,11 @@ actor StickWorker {
             throw StickError.message("Root directory changed during backup. No data was deleted.")
         }
         try await log("Backup verification completed")
+        if backupOnly {
+            try await log("Backup-only completed; stick left unchanged and mounted")
+            await update(.backedUp, "Backup verified • stick unchanged", destination)
+            return
+        }
         await update(.saved, "Backup verified", destination)
         guard try validate(volume) == device else { throw StickError.message("The USB device changed.") }
         await update(.saved, format ? "Formatting as FAT32…" : "Clearing stick…", destination)
@@ -350,10 +416,13 @@ actor StickWorker {
             root = URL(fileURLWithPath: mount)
             currentVolume = StickVolume(id: uuid, name: volume.name, url: root, capacity: volume.capacity)
             try await log("FAT32 format completed")
+            try ensureSpotlightMarker(on: currentVolume)
+            try await log("Created Spotlight exclusion marker on the formatted volume")
         } else {
             try await log("Starting removal of all root items")
             var retainedSpotlight = false
             for item in try children(root) {
+                if item.lastPathComponent == Self.spotlightMarkerName { continue }
                 _ = try validate(volume)
                 do {
                     try fm.removeItem(at: item)
@@ -372,12 +441,15 @@ actor StickWorker {
                 try await log("Deleted: \(item.lastPathComponent)")
             }
             let remaining = try children(root).filter {
-                !(retainedSpotlight && $0.lastPathComponent == ".Spotlight-V100")
+                $0.lastPathComponent != Self.spotlightMarkerName &&
+                    !(retainedSpotlight && $0.lastPathComponent == ".Spotlight-V100")
             }
             guard remaining.isEmpty else {
                 throw StickError.message("Cleanup is incomplete: items remain on the stick. macOS may have recreated system files.")
             }
         }
+        try ensureSpotlightMarker(on: currentVolume)
+        try await log("Ensured empty .metadata_never_index marker")
         try fm.createDirectory(at: root.appendingPathComponent("Abgabe"), withIntermediateDirectories: false)
         try await log("Created empty Abgabe folder")
         let assignment = root.appendingPathComponent("Angabe")
@@ -395,7 +467,11 @@ actor StickWorker {
             throw StickError.message("Reset complete, but device identity changed before ejection.")
         }
         do {
-            try await eject(currentVolume, device: device)
+            let volumeToEject = currentVolume
+            try await log("Waiting for the serial ejection queue")
+            try await EjectionQueue.shared.perform {
+                try await self.eject(volumeToEject, device: device, log: log)
+            }
         } catch {
             throw StickError.message("Backup and reset completed, but ejection failed: \(error.localizedDescription)")
         }
