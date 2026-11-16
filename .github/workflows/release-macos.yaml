@@ -33,40 +33,27 @@ jobs:
             CODE_SIGN_IDENTITY=- \
             build
 
-      - name: Package disk image
+      - name: Package macOS app
         shell: bash
         run: |
-          products="$RUNNER_TEMP/stickstation-build/Build/Products"
-          app="$products/Release/StickStation.app"
-          staging="$RUNNER_TEMP/stickstation-dmg"
-          dmg="$GITHUB_WORKSPACE/dist/StickStation-${GITHUB_REF_NAME}.dmg"
+          app="$RUNNER_TEMP/stickstation-build/Build/Products/Release/StickStation.app"
+          archive="$GITHUB_WORKSPACE/dist/StickStation-${GITHUB_REF_NAME}.zip"
 
           if [[ ! -f "$app/Contents/Info.plist" ]]; then
             printf 'Expected app bundle at %s\n' "$app" >&2
-            if [[ -d "$products" ]]; then
-              find "$products" -type d -name '*.app' -print
-            fi
             exit 1
           fi
 
-          mkdir -p "$staging" "$GITHUB_WORKSPACE/dist"
-          ditto "$app" "$staging/StickStation.app"
-          ln -s /Applications "$staging/Applications"
-
-          diskutil image create from \
-            --format UDZO \
-            --volumeName StickStation \
-            "$staging" \
-            "$dmg"
-
-          test -s "$dmg"
+          mkdir -p "$GITHUB_WORKSPACE/dist"
+          ditto -c -k --keepParent "$app" "$archive"
+          unzip -tq "$archive"
 
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           tag_ref="refs/tags/${GITHUB_REF_NAME}"
-          summary="Download the StickStation DMG from the Assets section below."
+          summary="Download the StickStation ZIP from the Assets section below."
 
           if [[ "$(git cat-file -t "$tag_ref")" == "tag" ]]; then
             tag_message="$(git for-each-ref \
@@ -77,7 +64,7 @@ jobs:
           fi
 
           gh release create "$GITHUB_REF_NAME" \
-            "dist/StickStation-${GITHUB_REF_NAME}.dmg" \
+            "dist/StickStation-${GITHUB_REF_NAME}.zip" \
             --verify-tag \
             --title "StickStation ${GITHUB_REF_NAME}" \
             --notes "$summary" \
