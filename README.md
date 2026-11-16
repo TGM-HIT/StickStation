@@ -4,6 +4,8 @@ Back up. Reset. Repeat.
 
 StickStation is a macOS app for preparing classroom USB sticks between assignments. It backs up and verifies submissions, clears or reformats sticks, copies the next assignment, and ejects completed drives automatically. Process up to 16 sticks at once with individual progress and results.
 
+[![Release macOS app](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml)
+
 ## Features
 
 - Automatic discovery of supported, mounted volumes.
