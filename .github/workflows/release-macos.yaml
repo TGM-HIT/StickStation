@@ -1,0 +1,72 @@
+name: Release macOS app
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Build StickStation
+        run: |
+          xcodebuild -version
+          xcodebuild \
+            -project StickStation.xcodeproj \
+            -scheme StickStation \
+            -configuration Release \
+            -destination 'generic/platform=macOS' \
+            -derivedDataPath "$RUNNER_TEMP/stickstation-build" \
+            ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGN_IDENTITY=- \
+            build
+
+      - name: Package disk image
+        run: |
+          app="$RUNNER_TEMP/stickstation-build/Build/Products/Release/StickStation.app"
+          staging="$RUNNER_TEMP/stickstation-dmg"
+          mkdir -p "$staging" dist
+
+          ditto "$app" "$staging/StickStation.app"
+          ln -s /Applications "$staging/Applications"
+
+          hdiutil create \
+            -volname StickStation \
+            -srcfolder "$staging" \
+            -format UDZO \
+            "dist/StickStation-${GITHUB_REF_NAME}.dmg"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag_ref="refs/tags/${GITHUB_REF_NAME}"
+          summary="Download the StickStation DMG from the Assets section below."
+
+          if [[ "$(git cat-file -t "$tag_ref")" == "tag" ]]; then
+            tag_message="$(git for-each-ref \
+              --format='%(contents:subject)%0a%0a%(contents:body)' "$tag_ref")"
+            if [[ "$tag_message" =~ [^[:space:]] ]]; then
+              summary="$tag_message"
+            fi
+          fi
+
+          gh release create "$GITHUB_REF_NAME" \
+            "dist/StickStation-${GITHUB_REF_NAME}.dmg" \
+            --verify-tag \
+            --title "StickStation ${GITHUB_REF_NAME}" \
+            --notes "$summary" \
+            --generate-notes
+
