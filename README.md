@@ -26,7 +26,7 @@ HIT C30
 HIT D40
 ```
 
-Use a **space**, not a hyphen, after `HIT`. The current empty-state message shows hyphenated examples, but the discovery code accepts the space-separated names above. Processing also checks that the selected volume is an external USB partition and verifies its identity before destructive operations.
+Use a **space**, not a hyphen, after `HIT`. Processing also checks that the selected volume is an external USB partition and verifies its identity before destructive operations.
 
 The stick uses two folders:
 
@@ -70,6 +70,14 @@ Backup directory/
 ```
 
 Failed operations may leave partial backup folders. Check the app’s result and `StickStation.log` to determine which steps completed. `Reset.txt` does not confirm successful ejection.
+
+## Languages
+
+StickStation supports English and German. macOS selects the interface language from your language preferences; you can set a language specifically for StickStation in System Settings > General > Language & Region > Applications, then relaunch the app.
+
+Translations are maintained in `StickStation/Localizable.xcstrings` and `StickStation/AppInfoPlist.xcstrings`. Build in Xcode to extract new localizable strings. Keep `StickStation`, `Angabe`, `Abgabe`, volume labels, and filenames unchanged when translating.
+
+To check German in Xcode, set the Run scheme's App Language to German. A German SwiftUI preview is also available in `ContentView.swift`. Check both singular and plural stick counts, confirmation messages, folder pickers, and error states.
 
 ## Building and development
 

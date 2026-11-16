@@ -22,8 +22,8 @@ final class StickController {
         panel.canChooseDirectories = true
         panel.canCreateDirectories = !assignment
         panel.allowsMultipleSelection = false
-        panel.prompt = "Choose folder"
-        panel.message = assignment ? "Choose the contents to copy into Angabe." : "Choose where verified backups will be stored."
+        panel.prompt = String(localized: "Choose folder")
+        panel.message = assignment ? String(localized: "Choose the contents to copy into Angabe.") : String(localized: "Choose where verified backups will be stored.")
         if panel.runModal() == .OK, let url = panel.url {
             if assignment { source = url } else { backupRoot = url }
         }
@@ -89,7 +89,7 @@ final class StickController {
                                 await self.set(row.id, phase: phase, detail: detail, backup: backup)
                             }
                         } catch {
-                            await self.set(row.id, phase: .failed, detail: error.localizedDescription, backup: nil)
+                            await self.set(row.id, phase: .failed, detail: "\(error.localizedDescription)", backup: nil)
                         }
                         await self.finishedOne()
                     }
@@ -103,7 +103,7 @@ final class StickController {
 
     private func finishedOne() { completed += 1 }
 
-    private func set(_ id: String, phase: StickPhase, detail: String, backup: URL?) {
+    private func set(_ id: String, phase: StickPhase, detail: LocalizedStringResource, backup: URL?) {
         guard let index = sticks.firstIndex(where: { $0.id == id }) else { return }
         sticks[index].phase = phase
         if phase == .ejected { sticks[index].isConnected = false }
@@ -142,12 +142,13 @@ struct ContentView: View {
                     }.buttonStyle(.plain).foregroundStyle(accent)
                     Button { Task { await model.refresh() } } label: { Image(systemName: "arrow.clockwise") }
                         .help("Refresh connected volumes")
+                        .accessibilityLabel("Refresh connected volumes")
                 }.disabled(model.running)
                 if model.sticks.isEmpty {
                     ContentUnavailableView {
                         Label("Ready for your USB sticks", systemImage: "externaldrive.badge.plus")
                     } description: {
-                        Text("Connect your USB hub. Sticks labeled HIT-A01 through HIT-D40 will appear here automatically.")
+                        Text("Connect your USB hub. Sticks labeled HIT A01 through HIT D40 will appear here automatically.")
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
@@ -177,9 +178,15 @@ struct ContentView: View {
         .task { await model.observeVolumes(named: NSWorkspace.didUnmountNotification) }
         .task { await model.observeVolumes(named: NSWorkspace.didRenameVolumeNotification) }
         .confirmationDialog("Back up and reset \(model.selectedCount) sticks?", isPresented: $confirm, titleVisibility: .visible) {
-            Button(model.format ? "Back up & format" : "Back up & reset", role: .destructive) { model.start() }
+            Button(role: .destructive) { model.start() } label: {
+                Text(model.format ? LocalizedStringResource("Back up & format") : LocalizedStringResource("Back up & reset"))
+            }
         } message: {
-            Text("Abgabe and all root files will be copied and verified. Then ALL data on the selected sticks will be deleted\(model.format ? " by formatting as FAT32" : ""). Angabe and Abgabe will be recreated. Other folders are not backed up. Sticks will be ejected automatically after reset. Keep them connected until “Safe to remove” appears.")
+            if model.format {
+                Text("Abgabe and all root files will be copied and verified. Then ALL data on the selected sticks will be deleted by formatting as FAT32. Angabe and Abgabe will be recreated. Other folders are not backed up. Sticks will be ejected automatically after reset. Keep them connected until “Safe to remove” appears.")
+            } else {
+                Text("Abgabe and all root files will be copied and verified. Then ALL data on the selected sticks will be deleted. Angabe and Abgabe will be recreated. Other folders are not backed up. Sticks will be ejected automatically after reset. Keep them connected until “Safe to remove” appears.")
+            }
         }
         .alert("USB operation", isPresented: Binding(get: { model.message != nil }, set: { if !$0 { model.message = nil } })) {
             Button("OK") { model.message = nil }
@@ -198,7 +205,7 @@ private struct SetupSidebar: View {
                     .frame(width: 42, height: 42)
                     .background(accent, in: RoundedRectangle(cornerRadius: 12))
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("StickStation").font(.title3.bold())
+                    Text(verbatim: "StickStation").font(.title3.bold())
                     Text("BACK UP. RESET. REPEAT.").font(.system(size: 9, weight: .semibold)).foregroundStyle(.secondary)
                 }
             }
@@ -233,19 +240,30 @@ private struct SetupSidebar: View {
 }
 
 private struct FolderSetting: View {
-    let title: String
-    let subtitle: String
+    let title: LocalizedStringResource
+    let subtitle: LocalizedStringResource
     let url: URL?
     let icon: String
     let action: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label(title, systemImage: icon).font(.subheadline.weight(.semibold))
+            Label {
+                Text(title)
+            } icon: {
+                Image(systemName: icon)
+            }
+            .font(.subheadline.weight(.semibold))
             Text(subtitle).font(.caption).foregroundStyle(.secondary)
             Button(action: action) {
                 HStack {
-                    Text(url?.lastPathComponent ?? "Choose folder…").lineLimit(1)
+                    Group {
+                        if let url {
+                            Text(url.lastPathComponent)
+                        } else {
+                            Text("Choose folder…")
+                        }
+                    }.lineLimit(1)
                     Spacer()
                     Image(systemName: "folder")
                 }.padding(10)
@@ -253,7 +271,7 @@ private struct FolderSetting: View {
             .buttonStyle(.plain)
             .background(.background, in: RoundedRectangle(cornerRadius: 8))
             .overlay(RoundedRectangle(cornerRadius: 8).stroke(.quaternary))
-            .help(url?.path ?? title)
+            .help(url.map { Text($0.path) } ?? Text(title))
         }
     }
 }
@@ -268,15 +286,19 @@ private struct DashboardHeader: View {
                 Text("Save submissions. Prepare the next assignment.").foregroundStyle(.secondary)
             }
             Spacer()
-            Label(running ? "Processing" : "Monitoring USB", systemImage: running ? "arrow.triangle.2.circlepath" : "circle.fill")
-                .font(.caption.weight(.medium)).foregroundStyle(running ? accent : .green)
-                .padding(9).background(.background, in: Capsule())
+            Label {
+                Text(running ? LocalizedStringResource("Processing") : LocalizedStringResource("Monitoring USB"))
+            } icon: {
+                Image(systemName: running ? "arrow.triangle.2.circlepath" : "circle.fill")
+            }
+            .font(.caption.weight(.medium)).foregroundStyle(running ? accent : .green)
+            .padding(9).background(.background, in: Capsule())
         }
     }
 }
 
 private struct SummaryTile: View {
-    let title: String
+    let title: LocalizedStringResource
     let count: Int
     let icon: String
     let color: Color
@@ -331,7 +353,13 @@ private struct StickCard: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Divider()
-            Label(row.phase.rawValue, systemImage: icon).font(.subheadline.weight(.semibold)).foregroundStyle(color)
+            Label {
+                Text(row.phase.title)
+            } icon: {
+                Image(systemName: icon)
+            }
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(color)
             Text(row.detail).font(.caption).foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, minHeight: 30, alignment: .topLeading)
                 .textSelection(.enabled)
@@ -349,6 +377,11 @@ private struct StickCard: View {
     }
 }
 
+#Preview("German") {
+    ContentView()
+        .environment(\.locale, Locale(identifier: "de"))
+}
+
 private struct BatchFooter: View {
     @Bindable var model: StickController
     @Binding var confirm: Bool
@@ -360,7 +393,7 @@ private struct BatchFooter: View {
             } else {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("\(model.selectedCount) sticks selected").font(.subheadline.weight(.semibold))
-                    Text(model.backupRoot == nil ? "Choose a backup directory to begin." : "Backups are verified before any data is deleted.")
+                    Text(model.backupRoot == nil ? LocalizedStringResource("Choose a backup directory to begin.") : LocalizedStringResource("Backups are verified before any data is deleted."))
                         .font(.caption).foregroundStyle(.secondary)
                 }
             }

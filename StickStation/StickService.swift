@@ -2,9 +2,19 @@ import Foundation
 import CryptoKit
 
 enum StickError: LocalizedError {
-    case message(String)
+    case message(LocalizedStringResource)
     var errorDescription: String? {
-        switch self { case .message(let text): return text }
+        switch self { case .message(let text): return String(localized: text) }
+    }
+
+    // Keep app-authored diagnostic messages in English regardless of the UI language.
+    // Details supplied by macOS retain the language chosen by the operating system.
+    var diagnosticDescription: String {
+        switch self {
+        case .message(var text):
+            text.locale = Locale(identifier: "en")
+            return String(localized: text)
+        }
     }
 }
 
@@ -15,13 +25,19 @@ struct StickVolume: Identifiable, Sendable {
     let capacity: Int64
 }
 
-enum StickPhase: String, Sendable {
-    case todo = "To do"
-    case working = "In process"
-    case saved = "Saved"
-    case reset = "Reset"
-    case ejected = "Ejected"
-    case failed = "Needs attention"
+enum StickPhase: Sendable {
+    case todo, working, saved, reset, ejected, failed
+
+    var title: LocalizedStringResource {
+        switch self {
+        case .todo: "To do"
+        case .working: "In process"
+        case .saved: "Saved"
+        case .reset: "Reset"
+        case .ejected: "Ejected"
+        case .failed: "Needs attention"
+        }
+    }
 }
 
 struct StickRow: Identifiable {
@@ -29,7 +45,7 @@ struct StickRow: Identifiable {
     var id: String { volume.id }
     var selected = true
     var phase: StickPhase = .todo
-    var detail = "Ready to back up"
+    var detail: LocalizedStringResource = "Ready to back up"
     var backup: URL?
     var isConnected = true
 }
@@ -87,7 +103,8 @@ actor StickWorker {
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         process.waitUntilExit()
         guard process.terminationStatus == 0 else {
-            throw StickError.message(String(data: data, encoding: .utf8) ?? "Disk operation failed.")
+            let diagnostic = String(data: data, encoding: .utf8) ?? ""
+            throw StickError.message("Disk operation failed: \(diagnostic)")
         }
         return data
     }
@@ -183,12 +200,13 @@ actor StickWorker {
             set itemName to item 2 of arguments
             set expectedUUID to item 3 of arguments
             set cleanupCommand to "cd " & quoted form of rootPath & " && actualUUID=$(/usr/sbin/diskutil info -plist . | /usr/bin/plutil -extract VolumeUUID raw -o - -) && /bin/test " & quoted form of expectedUUID & " = \\"$actualUUID\\" && /bin/rm -rf -- " & quoted form of ("./" & itemName)
-            do shell script cleanupCommand with administrator privileges with prompt "StickStation needs permission to remove protected files from " & rootPath & "."
+            do shell script cleanupCommand with administrator privileges with prompt (item 4 of arguments)
         end run
         """
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
-        process.arguments = ["-e", script, volume.url.path, item.lastPathComponent, volume.id]
+        let prompt = String(localized: "StickStation needs permission to remove protected files from \(volume.url.path).")
+        process.arguments = ["-e", script, volume.url.path, item.lastPathComponent, volume.id, prompt]
         let pipe = Pipe()
         process.standardOutput = pipe
         process.standardError = pipe
@@ -197,7 +215,7 @@ actor StickWorker {
         process.waitUntilExit()
         guard process.terminationStatus == 0 else {
             let outputText = String(decoding: output, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
-            let detail = outputText.isEmpty ? "No diagnostic output." : outputText
+            let detail = outputText.isEmpty ? String(localized: "No diagnostic output.") : outputText
             throw StickError.message("Cleanup was not completed (exit \(process.terminationStatus)). Administrator permission was cancelled or removal failed: \(detail)")
         }
     }
@@ -240,14 +258,14 @@ actor StickWorker {
     }
 
     func process(_ volume: StickVolume, backupRoot: URL, source: URL?, format: Bool,
-                 update: @escaping @Sendable (StickPhase, String, URL?) async -> Void) async throws {
+                 update: @escaping @Sendable (StickPhase, LocalizedStringResource, URL?) async -> Void) async throws {
         do {
             try await processAndEject(volume, backupRoot: backupRoot, source: source, format: format, update: update)
         } catch {
             let operationError = error
             do {
                 try await OperationLog.shared.append(in: backupRoot, stick: volume.name,
-                                                     message: "ERROR: \(operationError.localizedDescription)")
+                                                     message: "ERROR: \((operationError as? StickError)?.diagnosticDescription ?? operationError.localizedDescription)")
             } catch {
                 throw StickError.message("\(operationError.localizedDescription) Log could not be written: \(error.localizedDescription)")
             }
@@ -256,7 +274,7 @@ actor StickWorker {
     }
 
     private func processAndEject(_ volume: StickVolume, backupRoot: URL, source: URL?, format: Bool,
-                                update: @escaping @Sendable (StickPhase, String, URL?) async -> Void) async throws {
+                                update: @escaping @Sendable (StickPhase, LocalizedStringResource, URL?) async -> Void) async throws {
         let log: (String) async throws -> Void = { message in
             try await OperationLog.shared.append(in: backupRoot, stick: volume.name, message: message)
         }

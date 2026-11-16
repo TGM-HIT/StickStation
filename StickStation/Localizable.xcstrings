@@ -1,0 +1,902 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "%@ Log could not be written: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "%1$@ Das Protokoll konnte nicht geschrieben werden: %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ Log could not be written: %2$@"
+          }
+        }
+      }
+    },
+    "%lld finished · keep sticks connected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "%lld fertig · Sticks angeschlossen lassen"
+          }
+        }
+      }
+    },
+    "%lld sticks selected" : {
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld Stick ausgewählt"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld Sticks ausgewählt"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld Sticks ausgewählt"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld stick selected"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld sticks selected"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld sticks selected"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "A fresh start for every stick." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ein Neustart für jeden Stick."
+          }
+        }
+      }
+    },
+    "Abgabe + all root files are saved and checked before a stick is cleared. Operations are recorded in StickStation.log in your backup directory." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Abgabe und alle Dateien im Stammverzeichnis werden gesichert und überprüft, bevor ein Stick geleert wird. Vorgänge werden in StickStation.log im Sicherungsordner protokolliert."
+          }
+        }
+      }
+    },
+    "Abgabe and all root files will be copied and verified. Then ALL data on the selected sticks will be deleted by formatting as FAT32. Angabe and Abgabe will be recreated. Other folders are not backed up. Sticks will be ejected automatically after reset. Keep them connected until “Safe to remove” appears." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Abgabe und alle Dateien im Stammverzeichnis werden kopiert und überprüft. Anschließend werden ALLE Daten auf den ausgewählten Sticks durch Formatieren als FAT32 gelöscht. Angabe und Abgabe werden neu erstellt. Andere Ordner werden nicht gesichert. Die Sticks werden nach dem Zurücksetzen automatisch ausgeworfen. Lassen Sie sie angeschlossen, bis „Sicher entfernen“ angezeigt wird."
+          }
+        }
+      }
+    },
+    "Abgabe and all root files will be copied and verified. Then ALL data on the selected sticks will be deleted. Angabe and Abgabe will be recreated. Other folders are not backed up. Sticks will be ejected automatically after reset. Keep them connected until “Safe to remove” appears." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Abgabe und alle Dateien im Stammverzeichnis werden kopiert und überprüft. Anschließend werden ALLE Daten auf den ausgewählten Sticks gelöscht. Angabe und Abgabe werden neu erstellt. Andere Ordner werden nicht gesichert. Die Sticks werden nach dem Zurücksetzen automatisch ausgeworfen. Lassen Sie sie angeschlossen, bis „Sicher entfernen“ angezeigt wird."
+          }
+        }
+      }
+    },
+    "Administrator permission required…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Administratorfreigabe erforderlich …"
+          }
+        }
+      }
+    },
+    "Assignment source" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Angabe-Quellordner"
+          }
+        }
+      }
+    },
+    "Back up & format" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sichern & formatieren"
+          }
+        }
+      }
+    },
+    "Back up & reset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sichern & zurücksetzen"
+          }
+        }
+      }
+    },
+    "Back up and reset %lld sticks?" : {
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld Stick sichern und zurücksetzen?"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld Sticks sichern und zurücksetzen?"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "%lld Sticks sichern und zurücksetzen?"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "Back up and reset %lld stick?"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "Back up and reset %lld sticks?"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "machine_translated",
+                  "value" : "Back up and reset %lld sticks?"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "BACK UP. RESET. REPEAT." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "SICHERN. ZURÜCKSETZEN. WIEDERHOLEN."
+          }
+        }
+      }
+    },
+    "Backup and reset completed, but ejection failed: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sicherung und Zurücksetzen abgeschlossen, aber das Auswerfen ist fehlgeschlagen: %@"
+          }
+        }
+      }
+    },
+    "Backup and source folders must not be on a HIT stick." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sicherungs- und Quellordner dürfen nicht auf einem HIT-Stick liegen."
+          }
+        }
+      }
+    },
+    "Backup directory" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sicherungsordner"
+          }
+        }
+      }
+    },
+    "Backup verified" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sicherung überprüft"
+          }
+        }
+      }
+    },
+    "Backups are verified before any data is deleted." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sicherungen werden überprüft, bevor Daten gelöscht werden."
+          }
+        }
+      }
+    },
+    "BATCH SETUP" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "STAPELVERARBEITUNG"
+          }
+        }
+      }
+    },
+    "Cannot create the operation log in the backup directory." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Das Vorgangsprotokoll kann nicht im Sicherungsordner erstellt werden."
+          }
+        }
+      }
+    },
+    "Cannot identify the USB disk for ejection." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Der USB-Datenträger kann zum Auswerfen nicht identifiziert werden."
+          }
+        }
+      }
+    },
+    "Cannot identify this USB volume." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dieses USB-Volume kann nicht identifiziert werden."
+          }
+        }
+      }
+    },
+    "Cannot verify whether the USB disk was ejected." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Es kann nicht überprüft werden, ob der USB-Datenträger ausgeworfen wurde."
+          }
+        }
+      }
+    },
+    "Choose a backup directory to begin." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Wählen Sie zuerst einen Sicherungsordner."
+          }
+        }
+      }
+    },
+    "Choose folder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ordner auswählen"
+          }
+        }
+      }
+    },
+    "Choose folder…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ordner auswählen …"
+          }
+        }
+      }
+    },
+    "Choose the contents to copy into Angabe." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Wählen Sie den Ordner, dessen Inhalt in Angabe kopiert werden soll."
+          }
+        }
+      }
+    },
+    "Choose where verified backups will be stored." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Wählen Sie den Speicherort für überprüfte Sicherungen."
+          }
+        }
+      }
+    },
+    "Cleanup is incomplete: items remain on the stick. macOS may have recreated system files." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Bereinigung unvollständig: Auf dem Stick sind noch Objekte vorhanden. macOS hat möglicherweise Systemdateien neu erstellt."
+          }
+        }
+      }
+    },
+    "Cleanup target is outside the USB root." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Das zu löschende Objekt liegt außerhalb des Stammverzeichnisses des USB-Sticks."
+          }
+        }
+      }
+    },
+    "Cleanup was not completed (exit %d). Administrator permission was cancelled or removal failed: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Die Bereinigung wurde nicht abgeschlossen (Exitcode %1$d). Die Administratorfreigabe wurde abgebrochen oder das Löschen ist fehlgeschlagen: %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Cleanup was not completed (exit %1$d). Administrator permission was cancelled or removal failed: %2$@"
+          }
+        }
+      }
+    },
+    "Clear assignment source" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Auswahl des Angabe-Quellordners aufheben"
+          }
+        }
+      }
+    },
+    "Clearing stick…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Stick leeren …"
+          }
+        }
+      }
+    },
+    "Connect your USB hub. Sticks labeled HIT A01 through HIT D40 will appear here automatically." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Schließen Sie Ihren USB-Hub an. Sticks mit den Namen HIT A01 bis HIT D40 erscheinen hier automatisch."
+          }
+        }
+      }
+    },
+    "Connected sticks & recent results" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Verbundene Sticks & letzte Ergebnisse"
+          }
+        }
+      }
+    },
+    "Copying and verifying…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Kopieren und überprüfen …"
+          }
+        }
+      }
+    },
+    "Disconnected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nicht verbunden"
+          }
+        }
+      }
+    },
+    "Disk operation failed: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Datenträgervorgang fehlgeschlagen: %@"
+          }
+        }
+      }
+    },
+    "Ejected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ausgeworfen"
+          }
+        }
+      }
+    },
+    "Files changed during backup. No data was deleted." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dateien wurden während der Sicherung geändert. Es wurden keine Daten gelöscht."
+          }
+        }
+      }
+    },
+    "Format as FAT32" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Als FAT32 formatieren"
+          }
+        }
+      }
+    },
+    "Formatted, but the volume did not remount. Backup is safe." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Formatiert, aber das Volume wurde nicht erneut eingebunden. Die Sicherung ist sicher."
+          }
+        }
+      }
+    },
+    "Formatting as FAT32…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Als FAT32 formatieren …"
+          }
+        }
+      }
+    },
+    "In process" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "In Bearbeitung"
+          }
+        }
+      }
+    },
+    "Monitoring USB" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "USB-Überwachung"
+          }
+        }
+      }
+    },
+    "Needs attention" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Prüfung erforderlich"
+          }
+        }
+      }
+    },
+    "No diagnostic output." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Keine Diagnoseausgabe."
+          }
+        }
+      }
+    },
+    "Off: clear files and keep the existing format. On: reformat the USB volume." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aus: Dateien löschen und das bestehende Format beibehalten. Ein: das USB-Volume neu formatieren."
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "Optional · copied into Angabe" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Optional · wird in Angabe kopiert"
+          }
+        }
+      }
+    },
+    "Processing" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "In Bearbeitung"
+          }
+        }
+      }
+    },
+    "Ready for your USB sticks" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Bereit für Ihre USB-Sticks"
+          }
+        }
+      }
+    },
+    "Ready to back up" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Bereit zur Sicherung"
+          }
+        }
+      }
+    },
+    "Refresh connected volumes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Verbundene Volumes aktualisieren"
+          }
+        }
+      }
+    },
+    "Required · one folder per stick" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Erforderlich · ein Ordner pro Stick"
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zurückgesetzt"
+          }
+        }
+      }
+    },
+    "Reset complete • ejecting…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zurückgesetzt • Auswerfen …"
+          }
+        }
+      }
+    },
+    "Reset complete, but device identity changed before ejection." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zurücksetzen abgeschlossen, aber die Geräteidentität hat sich vor dem Auswerfen geändert."
+          }
+        }
+      }
+    },
+    "Root directory changed during backup. No data was deleted." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Das Stammverzeichnis wurde während der Sicherung geändert. Es wurden keine Daten gelöscht."
+          }
+        }
+      }
+    },
+    "Safe to remove" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sicher entfernen"
+          }
+        }
+      }
+    },
+    "Save submissions. Prepare the next assignment." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sichern Sie Abgaben. Bereiten Sie die nächste Aufgabe vor."
+          }
+        }
+      }
+    },
+    "Saved" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gesichert"
+          }
+        }
+      }
+    },
+    "Select %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "%@ auswählen"
+          }
+        }
+      }
+    },
+    "Select all" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Alle auswählen"
+          }
+        }
+      }
+    },
+    "Show backup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sicherung anzeigen"
+          }
+        }
+      }
+    },
+    "Stick ejected successfully, but the final log entry failed: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Der Stick wurde erfolgreich ausgeworfen, aber der letzte Protokolleintrag ist fehlgeschlagen: %@"
+          }
+        }
+      }
+    },
+    "StickStation needs permission to remove protected files from %@." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "StickStation benötigt die Berechtigung, geschützte Dateien von %@ zu entfernen."
+          }
+        }
+      }
+    },
+    "Symbolic links are not supported: %@. Stick was not cleared." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Symbolische Links werden nicht unterstützt: %@. Der Stick wurde nicht geleert."
+          }
+        }
+      }
+    },
+    "The backup directory cannot be inside the assignment source." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Der Sicherungsordner darf nicht im Angabe-Quellordner liegen."
+          }
+        }
+      }
+    },
+    "The USB device changed before ejection." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Das USB-Gerät hat sich vor dem Auswerfen geändert."
+          }
+        }
+      }
+    },
+    "The USB device changed." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Das USB-Gerät hat sich geändert."
+          }
+        }
+      }
+    },
+    "To do" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ausstehend"
+          }
+        }
+      }
+    },
+    "Unsupported file: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nicht unterstützte Datei: %@"
+          }
+        }
+      }
+    },
+    "Up to 16 sticks · automatic ejection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Bis zu 16 Sticks · automatisches Auswerfen"
+          }
+        }
+      }
+    },
+    "USB identity changed or this is not a supported USB partition. Reconnect and refresh." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Die Identität des USB-Geräts hat sich geändert oder die USB-Partition wird nicht unterstützt. Schließen Sie den Stick erneut an und aktualisieren Sie die Ansicht."
+          }
+        }
+      }
+    },
+    "USB operation" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "USB-Vorgang"
+          }
+        }
+      }
+    },
+    "USB workspace" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "USB-Arbeitsbereich"
+          }
+        }
+      }
+    },
+    "Verification failed for %@. Stick was not cleared." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Überprüfung von %@ fehlgeschlagen. Der Stick wurde nicht geleert."
+          }
+        }
+      }
+    },
+    "Verified before reset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vor dem Zurücksetzen überprüft"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.3"
+}
