@@ -22,6 +22,13 @@ jobs:
 
       - name: Build StickStation
         run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            printf 'Expected a release tag like v1.2.3, got %s\n' "$GITHUB_REF_NAME" >&2
+            exit 1
+          fi
+
+          version="${GITHUB_REF_NAME#v}"
+
           xcodebuild -version
           xcodebuild \
             -project StickStation.xcodeproj \
@@ -31,7 +38,16 @@ jobs:
             -derivedDataPath "$RUNNER_TEMP/stickstation-build" \
             ONLY_ACTIVE_ARCH=NO \
             CODE_SIGN_IDENTITY=- \
+            "MARKETING_VERSION=$version" \
             build
+
+
+          plist="$RUNNER_TEMP/stickstation-build/Build/Products/Release/StickStation.app/Contents/Info.plist"
+          actual_version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$plist")"
+          if [[ "$actual_version" != "$version" ]]; then
+            printf 'Expected app version %s, found %s\n' "$version" "$actual_version" >&2
+            exit 1
+          fi
 
       - name: Package macOS app
         shell: bash
