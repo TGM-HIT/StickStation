@@ -6,6 +6,10 @@
     <RootNamespace>StickStation</RootNamespace>
     <AssemblyName>StickStation</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
+    <!-- Unpackaged + self-contained by default so StickStation.exe starts without installing the Windows App Runtime. Override with -p:WindowsPackageType=MSIX for a packaged build. -->
+    <WindowsPackageType Condition="'$(WindowsPackageType)' == ''">None</WindowsPackageType>
+    <WindowsAppSDKSelfContained Condition="'$(WindowsAppSDKSelfContained)' == '' and '$(WindowsPackageType)' == 'None'">true</WindowsAppSDKSelfContained>
+    <SelfContained Condition="'$(WindowsPackageType)' == 'None'">true</SelfContained>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon Condition="Exists('Assets\AppIcon.ico')">Assets\AppIcon.ico</ApplicationIcon>
     <Platforms>x86;x64;ARM64</Platforms>

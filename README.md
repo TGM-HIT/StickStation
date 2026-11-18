@@ -113,13 +113,13 @@ Layout:
 | `windows/StickStation.Core.Tests` | xUnit tests using temporary folders and fakes; no real drives are touched. |
 | `windows/StickStation.App` | WinUI 3 app (XAML, `Strings/en-US` and `Strings/de-DE` resources). |
 
-Requirements: Windows 10 1809+ or Windows 11, .NET 10 SDK, and for running the packaged debug build Developer Mode plus the [winapp CLI](https://github.com/microsoft/winappCli).
+Requirements: Windows 10 1809+ or Windows 11 and the .NET 10 SDK. Builds are unpackaged and self-contained by default (no Windows App Runtime install needed); pass `-p:WindowsPackageType=MSIX` for a packaged build. Startup failures are shown in a message box and logged to `%TEMP%\StickStation-crash.log`.
 
 ```powershell
 cd windows
 dotnet test StickStation.Core.Tests                               # unit tests
 dotnet build StickStation.App/StickStation.csproj -p:Platform=x64 # build the app
-winapp run StickStation.App                                       # build and launch with package identity
+StickStation.App\bin\x64\Debug\net10.0-windows10.0.26100.0\win-x64\StickStation.exe   # the build is unpackaged and self-contained, so the exe starts directly
 
 # Self-contained, unpackaged build (what CI publishes as a zip)
 dotnet publish StickStation.App/StickStation.csproj -c Release -p:Platform=x64 -r win-x64 --self-contained -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true -o publish

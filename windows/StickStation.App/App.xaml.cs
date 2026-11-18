@@ -41,6 +41,8 @@ public partial class App : Application
     /// </summary>
     public App()
     {
+        Services.StartupErrors.Install();
+        UnhandledException += (_, e) => Services.StartupErrors.Report(e.Exception);
         InitializeComponent();
         var localizer = new Services.ResourceLocalizer();
         ViewModel = new StickStation.Core.ViewModels.MainViewModel(
