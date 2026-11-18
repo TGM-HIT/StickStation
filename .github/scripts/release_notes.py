@@ -113,9 +113,10 @@ def ai_summary(commits, api_key, model="gpt-5-mini", opener=urllib.request.urlop
         detail = error.read().decode("utf-8", "replace")[:500].replace("\n", " ")
         log(f"::warning::AI summary failed (HTTP {error.code} {error.reason}): {detail}")
         return ""
-            except Exception as error:
-                log(f"::warning::AI summary failed ({type(error).__name__}): {error}")
-                return ""
+    except Exception as error:
+        log(f"::warning::AI summary failed ({type(error).__name__}): {error}")
+        return ""
+
 
 def render(commits, summary="", previous=None, tag="", compare_base="", highlights=""):
     lines = []
