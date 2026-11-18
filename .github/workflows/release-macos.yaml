@@ -31,7 +31,7 @@ jobs:
 
           xcodebuild -version
           xcodebuild \
-            -project StickStation.xcodeproj \
+            -project macos/StickStation.xcodeproj \
             -scheme StickStation \
             -configuration Release \
             -destination 'generic/platform=macOS' \

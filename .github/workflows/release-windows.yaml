@@ -3,10 +3,10 @@ name: Windows
 on:
   push:
     branches: [main]
-    paths: ["windows/**", ".github/workflows/windows-release.yaml"]
+    paths: ["windows/**", ".github/workflows/release-windows.yaml"]
     tags: ["v*"]
   pull_request:
-    paths: ["windows/**", ".github/workflows/windows-release.yaml"]
+    paths: ["windows/**", ".github/workflows/release-windows.yaml"]
   workflow_dispatch:
 
 permissions:

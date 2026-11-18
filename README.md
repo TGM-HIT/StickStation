@@ -5,7 +5,7 @@ Back up. Reset. Repeat.
 StickStation is a macOS app for preparing classroom USB sticks between assignments. It backs up and verifies submissions, clears or reformats sticks, copies the next assignment, and ejects completed drives automatically. Process up to 16 sticks at once with individual progress and results. A Windows version (WinUI 3) lives in [`windows/`](windows/); see [Windows version](#windows-version).
 
 [![Release macOS app](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml)
-[![Windows build](https://github.com/TGM-HIT/StickStation/actions/workflows/windows-release.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/windows-release.yaml)
+[![Windows build](https://github.com/TGM-HIT/StickStation/actions/workflows/release-windows.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release-windows.yaml)
 
 ## Features
 
@@ -76,7 +76,7 @@ Failed operations may leave partial backup folders. Check the app’s result and
 
 StickStation supports English and German. macOS selects the interface language from your language preferences; you can set a language specifically for StickStation in System Settings > General > Language & Region > Applications, then relaunch the app.
 
-Translations are maintained in `StickStation/Localizable.xcstrings` and `StickStation/AppInfoPlist.xcstrings`. Build in Xcode to extract new localizable strings. Keep `StickStation`, `Angabe`, `Abgabe`, volume labels, and filenames unchanged when translating.
+Translations are maintained in `macos/StickStation/Localizable.xcstrings` and `macos/StickStation/AppInfoPlist.xcstrings`. Build in Xcode to extract new localizable strings. Keep `StickStation`, `Angabe`, `Abgabe`, volume labels, and filenames unchanged when translating.
 
 To check German in Xcode, set the Run scheme's App Language to German. A German SwiftUI preview is also available in `ContentView.swift`. Check both singular and plural stick counts, confirmation messages, folder pickers, and error states.
 
@@ -84,13 +84,13 @@ To check German in Xcode, set the Run scheme's App Language to German. A German 
 
 The app uses Swift, SwiftUI, AppKit, Foundation, and CryptoKit, together with macOS disk-management utilities. It is designed for macOS.
 
-Open the project in Xcode, select the StickStation app scheme and **My Mac** destination, then build and run. Configure signing for your development environment if Xcode requests it. This source checkout does not currently include an `.xcodeproj` or `Package.swift`; a standalone checkout needs a macOS SwiftUI app target containing the source files and app resources.
+Open `macos/StickStation.xcodeproj` in Xcode, select the StickStation app scheme and **My Mac** destination, then build and run. Configure signing for your development environment if Xcode requests it. This source checkout does not currently include an `.xcodeproj` or `Package.swift`; a standalone checkout needs a macOS SwiftUI app target containing the source files and app resources.
 
 | File | Responsibility |
 | --- | --- |
-| `StickStation/MyApp.swift` | App entry point and application icon setup. |
-| `StickStation/ContentView.swift` | Dashboard, batch configuration, and UI state. |
-| `StickStation/StickService.swift` | Discovery, backup verification, reset, formatting, ejection, and logging. |
+| `macos/StickStation/MyApp.swift` | App entry point and application icon setup. |
+| `macos/StickStation/ContentView.swift` | Dashboard, batch configuration, and UI state. |
+| `macos/StickStation/StickService.swift` | Discovery, backup verification, reset, formatting, ejection, and logging. |
 
 When testing reset or formatting changes, use spare USB sticks with disposable data and the supported volume names.
 
@@ -125,5 +125,5 @@ StickStation.App\bin\x64\Debug\net10.0-windows10.0.26100.0\win-x64\StickStation.
 dotnet publish StickStation.App/StickStation.csproj -c Release -p:Platform=x64 -r win-x64 --self-contained -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true -o publish
 ```
 
-The `Windows` workflow (`.github/workflows/windows-release.yaml`) builds, tests and publishes `StickStation-Windows-x64-v<version>.zip` (plus SHA-256 file) as a build artifact, and attaches it to the GitHub Release when a `vX.Y.Z` tag is pushed. Translations live in `windows/StickStation.App/Strings/<language>/Resources.resw`.
+The `Windows` workflow (`.github/workflows/release-windows.yaml`) builds, tests and publishes `StickStation-Windows-x64-v<version>.zip` (plus SHA-256 file) as a build artifact, and attaches it to the GitHub Release when a `vX.Y.Z` tag is pushed. Translations live in `windows/StickStation.App/Strings/<language>/Resources.resw`.
 
