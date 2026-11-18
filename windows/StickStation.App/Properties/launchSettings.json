@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "StickStation (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "StickStation (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

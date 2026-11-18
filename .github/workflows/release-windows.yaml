@@ -1,0 +1,62 @@
+name: Windows
+
+on:
+  push:
+    branches: [main]
+    paths: ["windows/**", ".github/workflows/release-windows.yaml"]
+  pull_request:
+    paths: ["windows/**", ".github/workflows/release-windows.yaml"]
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Test core library
+        run: dotnet test windows/StickStation.Core.Tests -c Release
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -match '^refs/tags/v(\d+\.\d+\.\d+)$') {
+            $version = $Matches[1]
+          } elseif ($env:GITHUB_REF -like 'refs/tags/*') {
+            throw "Tag $env:GITHUB_REF is not of the form vX.Y.Z"
+          } else {
+            $version = '0.0.0'
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Publish self-contained app (unpackaged)
+        run: >
+          dotnet publish windows/StickStation.App/StickStation.csproj
+          -c Release -p:Platform=x64 -r win-x64 --self-contained
+          -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true
+          -p:Version=${{ steps.version.outputs.version }}
+          -o publish
+
+      - name: Create zip and checksum
+        shell: pwsh
+        run: |
+          $name = "StickStation-Windows-x64-v${{ steps.version.outputs.version }}.zip"
+          Compress-Archive -Path publish\* -DestinationPath $name
+          (Get-FileHash $name -Algorithm SHA256).Hash.ToLower() + "  $name" | Set-Content "$name.sha256"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: StickStation-Windows-x64
+          path: |
+            StickStation-Windows-x64-*.zip
+            StickStation-Windows-x64-*.zip.sha256
+          if-no-files-found: error

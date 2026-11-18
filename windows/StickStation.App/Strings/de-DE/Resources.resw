@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="Tagline.Text" xml:space="preserve"><value>SICHERN. ZURÜCKSETZEN. WIEDERHOLEN.</value></data>
+  <data name="TaglineDetail.Text" xml:space="preserve"><value>Sichern Sie Abgaben. Bereiten Sie die nächste Aufgabe vor.</value></data>
+  <data name="BatchSetup.Text" xml:space="preserve"><value>STAPELVERARBEITUNG</value></data>
+  <data name="BackupDirectory.Text" xml:space="preserve"><value>Sicherungsordner</value></data>
+  <data name="BackupDirectoryHint.Text" xml:space="preserve"><value>Erforderlich · ein Ordner pro Stick</value></data>
+  <data name="AssignmentSource.Text" xml:space="preserve"><value>Angabe-Quellordner</value></data>
+  <data name="AssignmentSourceHint.Text" xml:space="preserve"><value>Optional · wird in Angabe kopiert</value></data>
+  <data name="ClearAssignment.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Auswahl des Angabe-Quellordners aufheben</value></data>
+  <data name="BackUpOnly.Header" xml:space="preserve"><value>Nur sichern</value></data>
+  <data name="FormatFat32.Header" xml:space="preserve"><value>Als FAT32 formatieren</value></data>
+  <data name="FormatFat32Hint.Text" xml:space="preserve"><value>Aus: Dateien löschen und das bestehende Format beibehalten. Ein: das USB-Volume neu formatieren (bis 32 GB, erfordert Administratorfreigabe).</value></data>
+  <data name="VerifiedInfo.Title" xml:space="preserve"><value>Vor dem Zurücksetzen überprüft</value></data>
+  <data name="VerifiedInfo.Message" xml:space="preserve"><value>Sicherungen werden überprüft, bevor Daten gelöscht werden. Vorgänge werden in StickStation.log im Sicherungsordner protokolliert.</value></data>
+  <data name="Workspace.Text" xml:space="preserve"><value>USB-Arbeitsbereich</value></data>
+  <data name="Phase_Todo_Tile.Text" xml:space="preserve"><value>Ausstehend</value></data>
+  <data name="Tile_InProcess.Text" xml:space="preserve"><value>In Bearbeitung</value></data>
+  <data name="Tile_Completed.Text" xml:space="preserve"><value>Abgeschlossen</value></data>
+  <data name="ConnectedSticks.Text" xml:space="preserve"><value>Verbundene Sticks &amp; letzte Ergebnisse</value></data>
+  <data name="SelectAll.Content" xml:space="preserve"><value>Alle auswählen</value></data>
+  <data name="Refresh.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Verbundene Volumes aktualisieren</value></data>
+  <data name="EmptyTitle.Text" xml:space="preserve"><value>Bereit für Ihre USB-Sticks</value></data>
+  <data name="EmptyDetail.Text" xml:space="preserve"><value>Schließen Sie Ihren USB-Hub an. Sticks mit den Namen HIT A01 bis HIT D40 erscheinen hier automatisch.</value></data>
+  <data name="ShowBackup.Content" xml:space="preserve"><value>Sicherung anzeigen</value></data>
+  <data name="Disconnected.Text" xml:space="preserve"><value>Nicht verbunden</value></data>
+
+  <data name="ChooseFolder" xml:space="preserve"><value>Ordner auswählen</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="ChooseFolderPlaceholder" xml:space="preserve"><value>Ordner auswählen …</value></data>
+  <data name="SticksSelected_One" xml:space="preserve"><value>{0} Stick ausgewählt</value></data>
+  <data name="SticksSelected_Other" xml:space="preserve"><value>{0} Sticks ausgewählt</value></data>
+  <data name="Finished" xml:space="preserve"><value>{0} fertig · Sticks angeschlossen lassen</value></data>
+  <data name="Header_Processing" xml:space="preserve"><value>In Bearbeitung</value></data>
+  <data name="Header_Monitoring" xml:space="preserve"><value>USB-Überwachung</value></data>
+  <data name="Action_BackUpOnly" xml:space="preserve"><value>Nur sichern</value></data>
+  <data name="Action_BackUpReset" xml:space="preserve"><value>Sichern &amp; zurücksetzen</value></data>
+  <data name="Action_BackUpFormat" xml:space="preserve"><value>Sichern &amp; formatieren</value></data>
+  <data name="Limit_BackupOnly" xml:space="preserve"><value>Bis zu 16 Sticks · nur sichern</value></data>
+  <data name="Limit_Eject" xml:space="preserve"><value>Bis zu 16 Sticks · automatisches Auswerfen</value></data>
+  <data name="Footer_ChooseBackup" xml:space="preserve"><value>Wählen Sie zuerst einen Sicherungsordner.</value></data>
+  <data name="Footer_Verified" xml:space="preserve"><value>Sicherungen werden überprüft, bevor Daten gelöscht werden.</value></data>
+  <data name="Confirm_BackupTitle_One" xml:space="preserve"><value>{0} Stick sichern?</value></data>
+  <data name="Confirm_BackupTitle_Other" xml:space="preserve"><value>{0} Sticks sichern?</value></data>
+  <data name="Confirm_ResetTitle_One" xml:space="preserve"><value>{0} Stick sichern und zurücksetzen?</value></data>
+  <data name="Confirm_ResetTitle_Other" xml:space="preserve"><value>{0} Sticks sichern und zurücksetzen?</value></data>
+  <data name="Confirm_BackupOnly" xml:space="preserve"><value>Abgabe und alle Dateien im Stammverzeichnis werden kopiert und überprüft. Andere Ordner werden nicht gesichert. Auf den Sticks werden keine Dateien geändert. Die Sticks bleiben nach der Sicherung eingebunden.</value></data>
+  <data name="Confirm_Format" xml:space="preserve"><value>Abgabe und alle Dateien im Stammverzeichnis werden kopiert und überprüft. Anschließend werden ALLE Daten auf den ausgewählten Sticks durch Formatieren als FAT32 gelöscht. Angabe und Abgabe werden neu erstellt. Andere Ordner werden nicht gesichert. Die Sticks werden nach dem Zurücksetzen automatisch ausgeworfen. Lassen Sie sie angeschlossen, bis „Sicher entfernen“ angezeigt wird. Windows fragt nach der Administratorfreigabe.</value></data>
+  <data name="Confirm_Clear" xml:space="preserve"><value>Abgabe und alle Dateien im Stammverzeichnis werden kopiert und überprüft. Anschließend werden ALLE Daten auf den ausgewählten Sticks gelöscht. Angabe und Abgabe werden neu erstellt. Andere Ordner werden nicht gesichert. Die Sticks werden nach dem Zurücksetzen automatisch ausgeworfen. Lassen Sie sie angeschlossen, bis „Sicher entfernen“ angezeigt wird.</value></data>
+
+  <data name="Phase_Todo" xml:space="preserve"><value>Ausstehend</value></data>
+  <data name="Phase_Working" xml:space="preserve"><value>In Bearbeitung</value></data>
+  <data name="Phase_Saved" xml:space="preserve"><value>Gesichert</value></data>
+  <data name="Phase_Reset" xml:space="preserve"><value>Zurückgesetzt</value></data>
+  <data name="Phase_Ejected" xml:space="preserve"><value>Ausgeworfen</value></data>
+  <data name="Phase_BackedUp" xml:space="preserve"><value>Gesichert</value></data>
+  <data name="Phase_Failed" xml:space="preserve"><value>Prüfung erforderlich</value></data>
+
+  <data name="Status_ReadyToBackUp" xml:space="preserve"><value>Bereit zur Sicherung</value></data>
+  <data name="Status_CopyingAndVerifying" xml:space="preserve"><value>Kopieren und überprüfen …</value></data>
+  <data name="Status_BackupVerified" xml:space="preserve"><value>Sicherung überprüft</value></data>
+  <data name="Status_BackupVerifiedUnchanged" xml:space="preserve"><value>Sicherung überprüft • Stick unverändert</value></data>
+  <data name="Status_Formatting" xml:space="preserve"><value>Als FAT32 formatieren …</value></data>
+  <data name="Status_Clearing" xml:space="preserve"><value>Stick leeren …</value></data>
+  <data name="Status_AdministratorPermissionRequired" xml:space="preserve"><value>Administratorfreigabe erforderlich …</value></data>
+  <data name="Status_ResetEjecting" xml:space="preserve"><value>Zurückgesetzt • Auswerfen …</value></data>
+  <data name="Status_SafeToRemove" xml:space="preserve"><value>Sicher entfernen</value></data>
+
+  <data name="Error_SymbolicLink" xml:space="preserve"><value>Symbolische Links werden nicht unterstützt: {0}. Der Stick wurde nicht geleert.</value></data>
+  <data name="Error_UnsupportedFile" xml:space="preserve"><value>Nicht unterstützte Datei: {0}</value></data>
+  <data name="Error_VerificationFailed" xml:space="preserve"><value>Überprüfung von {0} fehlgeschlagen. Der Stick wurde nicht geleert.</value></data>
+  <data name="Error_FilesChangedDuringBackup" xml:space="preserve"><value>Dateien wurden während der Sicherung geändert. Es wurden keine Daten gelöscht.</value></data>
+  <data name="Error_RootChangedDuringBackup" xml:space="preserve"><value>Das Stammverzeichnis wurde während der Sicherung geändert. Es wurden keine Daten gelöscht.</value></data>
+  <data name="Error_FoldersOnStick" xml:space="preserve"><value>Sicherungs- und Quellordner dürfen nicht auf einem HIT-Stick liegen.</value></data>
+  <data name="Error_BackupInsideSource" xml:space="preserve"><value>Der Sicherungsordner darf nicht im Angabe-Quellordner liegen.</value></data>
+  <data name="Error_BackupDirectoryMissing" xml:space="preserve"><value>Der Sicherungsordner existiert nicht.</value></data>
+  <data name="Error_SourceDirectoryMissing" xml:space="preserve"><value>Der Angabe-Quellordner existiert nicht.</value></data>
+  <data name="Error_LogCreateFailed" xml:space="preserve"><value>Das Vorgangsprotokoll kann nicht im Sicherungsordner erstellt werden.</value></data>
+  <data name="Error_UsbIdentityChanged" xml:space="preserve"><value>Das USB-Gerät hat sich geändert. Schließen Sie den Stick erneut an und aktualisieren Sie die Ansicht.</value></data>
+  <data name="Error_DeviceChangedBeforeEject" xml:space="preserve"><value>Das USB-Gerät hat sich vor dem Auswerfen geändert.</value></data>
+  <data name="Error_DiskOperationFailed" xml:space="preserve"><value>Datenträgervorgang fehlgeschlagen: {0}</value></data>
+  <data name="Error_AdministratorCancelled" xml:space="preserve"><value>Die Administratorfreigabe wurde abgebrochen; der Stick wurde nicht formatiert.</value></data>
+  <data name="Error_FormatNotRemounted" xml:space="preserve"><value>Formatiert, aber das Volume wurde nicht erneut eingebunden. Die Sicherung ist sicher.</value></data>
+  <data name="Error_Fat32TooLarge" xml:space="preserve"><value>Windows kann nur Volumes bis 32 GB als FAT32 formatieren. Verwenden Sie für diesen Stick den Modus „Dateien löschen“.</value></data>
+  <data name="Error_CleanupIncomplete" xml:space="preserve"><value>Bereinigung unvollständig: Auf dem Stick sind noch Objekte vorhanden.</value></data>
+  <data name="Error_CleanupFailed" xml:space="preserve"><value>{0} kann nicht gelöscht werden: {1}</value></data>
+  <data name="Error_EjectFailed" xml:space="preserve"><value>Auswerfen fehlgeschlagen: {0}</value></data>
+  <data name="Error_ResetButEjectFailed" xml:space="preserve"><value>Sicherung und Zurücksetzen abgeschlossen, aber das Auswerfen ist fehlgeschlagen: {0}</value></data>
+  <data name="Error_EjectedButLogFailed" xml:space="preserve"><value>Der Stick wurde erfolgreich ausgeworfen, aber der letzte Protokolleintrag ist fehlgeschlagen: {0}</value></data>
+  <data name="Error_OperationAndLogFailed" xml:space="preserve"><value>{0} Das Protokoll konnte nicht geschrieben werden: {1}</value></data>
+  <data name="Error_IdentityChangedBeforeEject" xml:space="preserve"><value>Zurücksetzen abgeschlossen, aber die Geräteidentität hat sich vor dem Auswerfen geändert.</value></data>
+</root>

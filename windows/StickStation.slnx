@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/StickStation.App/">
+    <Project Path="StickStation.App/StickStation.csproj" />
+  </Folder>
+  <Project Path="StickStation.Core.Tests/StickStation.Core.Tests.csproj" />
+  <Project Path="StickStation.Core/StickStation.Core.csproj" />
+</Solution>

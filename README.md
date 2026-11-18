@@ -2,9 +2,11 @@
 
 Back up. Reset. Repeat.
 
-StickStation is a macOS app for preparing classroom USB sticks between assignments. It backs up and verifies submissions, clears or reformats sticks, copies the next assignment, and ejects completed drives automatically. Process up to 16 sticks at once with individual progress and results.
+StickStation is a macOS app for preparing classroom USB sticks between assignments. It backs up and verifies submissions, clears or reformats sticks, copies the next assignment, and ejects completed drives automatically. Process up to 16 sticks at once with individual progress and results. A Windows version (WinUI 3) lives in [`windows/`](windows/); see [Windows version](#windows-version).
 
-[![Release macOS app](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml)
+[![Release](https://github.com/TGM-HIT/StickStation/actions/workflows/release.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release.yaml)
+[![macOS build](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml)
+[![Windows build](https://github.com/TGM-HIT/StickStation/actions/workflows/release-windows.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release-windows.yaml)
 
 ## Features
 
@@ -75,7 +77,7 @@ Failed operations may leave partial backup folders. Check the app’s result and
 
 StickStation supports English and German. macOS selects the interface language from your language preferences; you can set a language specifically for StickStation in System Settings > General > Language & Region > Applications, then relaunch the app.
 
-Translations are maintained in `StickStation/Localizable.xcstrings` and `StickStation/AppInfoPlist.xcstrings`. Build in Xcode to extract new localizable strings. Keep `StickStation`, `Angabe`, `Abgabe`, volume labels, and filenames unchanged when translating.
+Translations are maintained in `macos/StickStation/Localizable.xcstrings` and `macos/StickStation/AppInfoPlist.xcstrings`. Build in Xcode to extract new localizable strings. Keep `StickStation`, `Angabe`, `Abgabe`, volume labels, and filenames unchanged when translating.
 
 To check German in Xcode, set the Run scheme's App Language to German. A German SwiftUI preview is also available in `ContentView.swift`. Check both singular and plural stick counts, confirmation messages, folder pickers, and error states.
 
@@ -83,12 +85,49 @@ To check German in Xcode, set the Run scheme's App Language to German. A German 
 
 The app uses Swift, SwiftUI, AppKit, Foundation, and CryptoKit, together with macOS disk-management utilities. It is designed for macOS.
 
-Open the project in Xcode, select the StickStation app scheme and **My Mac** destination, then build and run. Configure signing for your development environment if Xcode requests it. This source checkout does not currently include an `.xcodeproj` or `Package.swift`; a standalone checkout needs a macOS SwiftUI app target containing the source files and app resources.
+Open `macos/StickStation.xcodeproj` in Xcode, select the StickStation app scheme and **My Mac** destination, then build and run. Configure signing for your development environment if Xcode requests it. This source checkout does not currently include an `.xcodeproj` or `Package.swift`; a standalone checkout needs a macOS SwiftUI app target containing the source files and app resources.
 
 | File | Responsibility |
 | --- | --- |
-| `StickStation/MyApp.swift` | App entry point and application icon setup. |
-| `StickStation/ContentView.swift` | Dashboard, batch configuration, and UI state. |
-| `StickStation/StickService.swift` | Discovery, backup verification, reset, formatting, ejection, and logging. |
+| `macos/StickStation/MyApp.swift` | App entry point and application icon setup. |
+| `macos/StickStation/ContentView.swift` | Dashboard, batch configuration, and UI state. |
+| `macos/StickStation/StickService.swift` | Discovery, backup verification, reset, formatting, ejection, and logging. |
 
 When testing reset or formatting changes, use spare USB sticks with disposable data and the supported volume names.
+
+## Windows version
+
+The Windows app in [`windows/`](windows/) is a WinUI 3 (C#, Windows App SDK, MVVM) port with the same workflow as the macOS app: discovery of mounted removable USB volumes named `HIT <A-D><01-40>`, USB identity checks before destructive operations, batches of up to 16 sticks with per-stick progress, SHA-256-verified backups of `Abgabe` and root-level files into unique per-stick/run folders, an optional assignment source copied into `Angabe`, clear-files or FAT32 reset, a **Back up only** mode, automatic ejection with a "Safe to remove" status, and English/German localization (follows the Windows display language).
+
+Differences from macOS:
+
+- Formatting as FAT32 runs `Format-Volume` and requests administrator permission through UAC (once per stick). Windows can only format volumes up to 32 GB as FAT32; use clear-files mode for larger sticks. Clear-files mode needs no administrator rights.
+- `System Volume Information` and `$RECYCLE.BIN` are left in place instead of the Spotlight folder.
+- Only volumes with a drive letter are supported.
+- Safety rules are identical: the backup directory must not be on a managed stick or inside the assignment source, and symbolic links, junctions and special files are rejected.
+
+Layout:
+
+| Project | Responsibility |
+| --- | --- |
+| `windows/StickStation.Core` | Testable library: backup/verify/reset pipeline, path safety, logging, view models, Windows volume service (WMI, `Format-Volume`, shell eject). |
+| `windows/StickStation.Core.Tests` | xUnit tests using temporary folders and fakes; no real drives are touched. |
+| `windows/StickStation.App` | WinUI 3 app (XAML, `Strings/en-US` and `Strings/de-DE` resources). |
+
+Requirements: Windows 10 1809+ or Windows 11 and the .NET 10 SDK. Builds are unpackaged and self-contained by default (no Windows App Runtime install needed); pass `-p:WindowsPackageType=MSIX` for a packaged build. Startup failures are shown in a message box and logged to `%TEMP%\StickStation-crash.log`.
+
+```powershell
+cd windows
+dotnet test StickStation.Core.Tests                               # unit tests
+dotnet build StickStation.App/StickStation.csproj -p:Platform=x64 # build the app
+StickStation.App\bin\x64\Debug\net10.0-windows10.0.26100.0\win-x64\StickStation.exe   # the build is unpackaged and self-contained, so the exe starts directly
+
+# Self-contained, unpackaged build (what CI publishes as a zip)
+dotnet publish StickStation.App/StickStation.csproj -c Release -p:Platform=x64 -r win-x64 --self-contained -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true -o publish
+```
+
+The `Windows` workflow (`.github/workflows/release-windows.yaml`) builds, tests and publishes `StickStation-Windows-x64-v<version>.zip` (plus SHA-256 file) as a build artifact. Translations live in `windows/StickStation.App/Strings/<language>/Resources.resw`.
+
+## Releases
+
+Pushing a X.Y.Z tag runs .github/workflows/release.yaml. It builds both apps from that tag by calling elease-macos.yaml and elease-windows.yaml, then creates a single GitHub Release only if both builds succeed. The release always contains StickStation-macOS-vX.Y.Z.zip and StickStation-Windows-x64-vX.Y.Z.zip with SHA-256 files, plus generated release notes: an optional AI-written "Highlights" summary (only if the `OPENAI_API_KEY` secret is set and the API call succeeds) followed by the deterministic "All changes" list. Each changelog item is labelled **macOS**, **Windows** or **macOS + Windows** according to the files it touches (.github/scripts/release_notes.py). Re-running the workflow updates the existing release. The macOS and Windows workflows can also be started manually and only upload build artifacts.
