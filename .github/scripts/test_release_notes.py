@@ -49,14 +49,14 @@ class AiSummaryTests(unittest.TestCase):
         def boom(*a, **k):
             raise AssertionError("must not be called")
 
-        self.assertEqual(rn.ai_summary(self.COMMITS, "", opener=boom), "")
+        self.assertEqual(rn.ai_summary(self.COMMITS, "", opener=boom), {})
 
     def test_failure_falls_back(self):
         def fail(*a, **k):
             raise OSError("down")
 
         logs = []
-        self.assertEqual(rn.ai_summary(self.COMMITS, "key", opener=fail, log=logs.append), "")
+        self.assertEqual(rn.ai_summary(self.COMMITS, "key", opener=fail, log=logs.append), {})
         self.assertIn("OSError", logs[0])
         self.assertNotIn("key", logs[0].replace("OSError", ""))
 
@@ -67,7 +67,7 @@ class AiSummaryTests(unittest.TestCase):
             raise urllib.error.HTTPError("u", 401, "Unauthorized", {}, io.BytesIO(b'{"error":"bad key"}'))
 
         logs = []
-        self.assertEqual(rn.ai_summary(self.COMMITS, "secret", opener=deny, log=logs.append), "")
+        self.assertEqual(rn.ai_summary(self.COMMITS, "secret", opener=deny, log=logs.append), {})
         self.assertIn("HTTP 401", logs[0])
         self.assertIn("bad key", logs[0])
         self.assertNotIn("secret", logs[0])
@@ -80,16 +80,29 @@ class AiSummaryTests(unittest.TestCase):
         def fake(request, timeout):
             seen["body"] = json.loads(request.data)
             payload = {"status": "completed", "output": [
-                {"type": "message", "content": [{"type": "output_text", "text": "## Highlights\nX"}]}]}
+                {"type": "message", "content": [{"type": "output_text", "text": "```json\n{\"highlights\": \"- X\", \"development\": \"- Y\"}\n```"}]}]}
             return io.BytesIO(json.dumps(payload).encode())
 
         fake_cm = lambda request, timeout: _Ctx(fake(request, timeout))
-        self.assertEqual(rn.ai_summary(self.COMMITS, "key", opener=fake_cm), "## Highlights\nX")
+        self.assertEqual(rn.ai_summary(self.COMMITS, "key", opener=fake_cm), {"highlights": "- X", "development": "- Y"})
         self.assertIn("[Windows] Fix", seen["body"]["input"])
 
     def test_highlights_rendered_before_list(self):
-        out = rn.render(self.COMMITS, highlights="## Highlights\nX", tag="v1.0.0")
-        self.assertLess(out.index("## Highlights"), out.index("## All changes"))
+        out = rn.render(self.COMMITS, sections={"highlights": "- X", "development": "- Y"}, tag="v1.0.0")
+        self.assertLess(out.index("## Highlights"), out.index("## Development changes"))
+        self.assertLess(out.index("## Development changes"), out.index("## All changes"))
+
+    def test_empty_section_omitted(self):
+        out = rn.render(self.COMMITS, sections={"highlights": "- X"}, tag="v1.0.0")
+        self.assertIn("## Highlights", out)
+        self.assertNotIn("## Development changes", out)
+
+    def test_parse_sections_robust(self):
+        self.assertEqual(rn.parse_sections("not json"), {})
+        self.assertEqual(rn.parse_sections("{bad"), {})
+        self.assertEqual(rn.parse_sections("[1]"), {})
+        self.assertEqual(rn.parse_sections('{"highlights": "", "development": "- D"}'), {"development": "- D"})
+        self.assertEqual(rn.parse_sections('x {"highlights": ["a", "b"]} y'), {"highlights": "- a\n- b"})
 
 
 class _Ctx:
