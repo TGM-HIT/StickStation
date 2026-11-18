@@ -11,6 +11,7 @@ import os
 import re
 import subprocess
 import sys
+import urllib.error
 import urllib.request
 
 MACOS = "macOS"
@@ -79,8 +80,9 @@ INSTRUCTIONS = (
 )
 
 
-def ai_summary(commits, api_key, model="gpt-5-mini", opener=urllib.request.urlopen):
+def ai_summary(commits, api_key, model="gpt-5-mini", opener=urllib.request.urlopen, log=None):
     """Return AI-written highlights, or "" if there is no key or the call fails."""
+    log = log or (lambda message: print(message, file=sys.stderr))
     if not api_key or not commits:
         return ""
     text = "\n".join(f"[{label}] {subject}" for _, subject, label in commits)
@@ -94,6 +96,7 @@ def ai_summary(commits, api_key, model="gpt-5-mini", opener=urllib.request.urlop
         with opener(request, timeout=120) as response:
             data = json.load(response)
         if data.get("status") != "completed":
+            log(f"::warning::AI summary skipped: response status {data.get('status')!r}, error {data.get('error')!r}")
             return ""
         parts = [
             c.get("text", "")
@@ -102,11 +105,17 @@ def ai_summary(commits, api_key, model="gpt-5-mini", opener=urllib.request.urlop
             for c in item.get("content", [])
             if c.get("type") == "output_text"
         ]
-        return "\n".join(parts).strip()
-    except Exception as error:
-        print(f"::warning::AI summary failed, using commit list only: {error}", file=sys.stderr)
+        text = "\n".join(parts).strip()
+        if not text:
+            log("::warning::AI summary skipped: response contained no output text")
+        return text
+    except urllib.error.HTTPError as error:
+        detail = error.read().decode("utf-8", "replace")[:500].replace("\n", " ")
+        log(f"::warning::AI summary failed (HTTP {error.code} {error.reason}): {detail}")
         return ""
-
+            except Exception as error:
+                log(f"::warning::AI summary failed ({type(error).__name__}): {error}")
+                return ""
 
 def render(commits, summary="", previous=None, tag="", compare_base="", highlights=""):
     lines = []

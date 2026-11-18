@@ -55,7 +55,22 @@ class AiSummaryTests(unittest.TestCase):
         def fail(*a, **k):
             raise OSError("down")
 
-        self.assertEqual(rn.ai_summary(self.COMMITS, "key", opener=fail), "")
+        logs = []
+        self.assertEqual(rn.ai_summary(self.COMMITS, "key", opener=fail, log=logs.append), "")
+        self.assertIn("OSError", logs[0])
+        self.assertNotIn("key", logs[0].replace("OSError", ""))
+
+    def test_http_error_logs_status_and_body(self):
+        import io, urllib.error
+
+        def deny(*a, **k):
+            raise urllib.error.HTTPError("u", 401, "Unauthorized", {}, io.BytesIO(b'{"error":"bad key"}'))
+
+        logs = []
+        self.assertEqual(rn.ai_summary(self.COMMITS, "secret", opener=deny, log=logs.append), "")
+        self.assertIn("HTTP 401", logs[0])
+        self.assertIn("bad key", logs[0])
+        self.assertNotIn("secret", logs[0])
 
     def test_success_and_platform_in_prompt(self):
         import io, json
