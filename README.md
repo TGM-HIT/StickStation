@@ -4,7 +4,8 @@ Back up. Reset. Repeat.
 
 StickStation is a macOS app for preparing classroom USB sticks between assignments. It backs up and verifies submissions, clears or reformats sticks, copies the next assignment, and ejects completed drives automatically. Process up to 16 sticks at once with individual progress and results. A Windows version (WinUI 3) lives in [`windows/`](windows/); see [Windows version](#windows-version).
 
-[![Release macOS app](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml)
+[![Release](https://github.com/TGM-HIT/StickStation/actions/workflows/release.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release.yaml)
+[![macOS build](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml)
 [![Windows build](https://github.com/TGM-HIT/StickStation/actions/workflows/release-windows.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release-windows.yaml)
 
 ## Features
@@ -125,5 +126,8 @@ StickStation.App\bin\x64\Debug\net10.0-windows10.0.26100.0\win-x64\StickStation.
 dotnet publish StickStation.App/StickStation.csproj -c Release -p:Platform=x64 -r win-x64 --self-contained -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true -o publish
 ```
 
-The `Windows` workflow (`.github/workflows/release-windows.yaml`) builds, tests and publishes `StickStation-Windows-x64-v<version>.zip` (plus SHA-256 file) as a build artifact, and attaches it to the GitHub Release when a `vX.Y.Z` tag is pushed. Translations live in `windows/StickStation.App/Strings/<language>/Resources.resw`.
+The `Windows` workflow (`.github/workflows/release-windows.yaml`) builds, tests and publishes `StickStation-Windows-x64-v<version>.zip` (plus SHA-256 file) as a build artifact. Translations live in `windows/StickStation.App/Strings/<language>/Resources.resw`.
 
+## Releases
+
+Pushing a X.Y.Z tag runs .github/workflows/release.yaml. It builds both apps from that tag by calling elease-macos.yaml and elease-windows.yaml, then creates a single GitHub Release only if both builds succeed. The release always contains StickStation-macOS-vX.Y.Z.zip and StickStation-Windows-x64-vX.Y.Z.zip with SHA-256 files, plus generated release notes. Each changelog item is labelled **macOS**, **Windows** or **macOS + Windows** according to the files it touches (.github/scripts/release_notes.py). Re-running the workflow updates the existing release. The macOS and Windows workflows can also be started manually and only upload build artifacts.

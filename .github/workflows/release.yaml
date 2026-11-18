@@ -1,0 +1,71 @@
+name: Release
+
+# One release per v* tag: build both apps from the same tag, then publish a single
+# GitHub Release containing both artifacts and combined, platform-labelled notes.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  macos:
+    uses: ./.github/workflows/release-macos.yaml
+
+  windows:
+    uses: ./.github/workflows/release-windows.yaml
+
+  publish:
+    needs: [macos, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      # Checkout can replace an annotated tag with its commit; restore the real tags.
+      - name: Fetch tags
+        run: git fetch --force --tags
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Verify artifacts
+        run: |
+          shopt -s nullglob
+          mac=(artifacts/StickStation-macOS/StickStation-macOS-"$GITHUB_REF_NAME".zip)
+          win=(artifacts/StickStation-Windows-x64/StickStation-Windows-x64-"$GITHUB_REF_NAME".zip)
+          if [[ ${#mac[@]} -ne 1 || ${#win[@]} -ne 1 ]]; then
+            echo '::error::Both the macOS and Windows archives are required.'
+            find artifacts -type f
+            exit 1
+          fi
+
+      - name: Generate release notes
+        run: |
+          python3 .github/scripts/test_release_notes.py
+          python3 .github/scripts/release_notes.py "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" --server-url "$GITHUB_SERVER_URL" > "$RUNNER_TEMP/notes.md"
+          cat "$RUNNER_TEMP/notes.md"
+
+      - name: Publish GitHub Release
+        run: |
+          assets=(artifacts/*/*)
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release edit "$GITHUB_REF_NAME" --title "StickStation $GITHUB_REF_NAME" \
+              --notes-file "$RUNNER_TEMP/notes.md"
+            gh release upload "$GITHUB_REF_NAME" "${assets[@]}" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "${assets[@]}" --verify-tag \
+              --title "StickStation $GITHUB_REF_NAME" --notes-file "$RUNNER_TEMP/notes.md"
+          fi
