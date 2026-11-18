@@ -42,5 +42,51 @@ class RenderTests(unittest.TestCase):
         self.assertNotIn("Full changelog", out)
 
 
+class AiSummaryTests(unittest.TestCase):
+    COMMITS = [("a1", "Fix", rn.WINDOWS)]
+
+    def test_no_key_skips_call(self):
+        def boom(*a, **k):
+            raise AssertionError("must not be called")
+
+        self.assertEqual(rn.ai_summary(self.COMMITS, "", opener=boom), "")
+
+    def test_failure_falls_back(self):
+        def fail(*a, **k):
+            raise OSError("down")
+
+        self.assertEqual(rn.ai_summary(self.COMMITS, "key", opener=fail), "")
+
+    def test_success_and_platform_in_prompt(self):
+        import io, json
+
+        seen = {}
+
+        def fake(request, timeout):
+            seen["body"] = json.loads(request.data)
+            payload = {"status": "completed", "output": [
+                {"type": "message", "content": [{"type": "output_text", "text": "## Highlights\nX"}]}]}
+            return io.BytesIO(json.dumps(payload).encode())
+
+        fake_cm = lambda request, timeout: _Ctx(fake(request, timeout))
+        self.assertEqual(rn.ai_summary(self.COMMITS, "key", opener=fake_cm), "## Highlights\nX")
+        self.assertIn("[Windows] Fix", seen["body"]["input"])
+
+    def test_highlights_rendered_before_list(self):
+        out = rn.render(self.COMMITS, highlights="## Highlights\nX", tag="v1.0.0")
+        self.assertLess(out.index("## Highlights"), out.index("## All changes"))
+
+
+class _Ctx:
+    def __init__(self, inner):
+        self.inner = inner
+
+    def __enter__(self):
+        return self.inner
+
+    def __exit__(self, *a):
+        return False
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -52,6 +52,8 @@ jobs:
           fi
 
       - name: Generate release notes
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           python3 .github/scripts/test_release_notes.py
           python3 .github/scripts/release_notes.py "$GITHUB_REF_NAME" \
