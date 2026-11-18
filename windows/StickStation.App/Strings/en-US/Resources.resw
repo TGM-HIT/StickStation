@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="Tagline.Text" xml:space="preserve"><value>BACK UP. RESET. REPEAT.</value></data>
+  <data name="TaglineDetail.Text" xml:space="preserve"><value>Save submissions. Prepare the next assignment.</value></data>
+  <data name="BatchSetup.Text" xml:space="preserve"><value>BATCH SETUP</value></data>
+  <data name="BackupDirectory.Text" xml:space="preserve"><value>Backup directory</value></data>
+  <data name="BackupDirectoryHint.Text" xml:space="preserve"><value>Required · one folder per stick</value></data>
+  <data name="AssignmentSource.Text" xml:space="preserve"><value>Assignment source</value></data>
+  <data name="AssignmentSourceHint.Text" xml:space="preserve"><value>Optional · copied into Angabe</value></data>
+  <data name="ClearAssignment.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Clear assignment source</value></data>
+  <data name="BackUpOnly.Header" xml:space="preserve"><value>Back up only</value></data>
+  <data name="FormatFat32.Header" xml:space="preserve"><value>Format as FAT32</value></data>
+  <data name="FormatFat32Hint.Text" xml:space="preserve"><value>Off: clear files and keep the existing format. On: reformat the USB volume (up to 32 GB, requires administrator permission).</value></data>
+  <data name="VerifiedInfo.Title" xml:space="preserve"><value>Verified before reset</value></data>
+  <data name="VerifiedInfo.Message" xml:space="preserve"><value>Backups are verified before any data is deleted. Operations are recorded in StickStation.log in your backup directory.</value></data>
+  <data name="Workspace.Text" xml:space="preserve"><value>USB workspace</value></data>
+  <data name="Phase_Todo_Tile.Text" xml:space="preserve"><value>To do</value></data>
+  <data name="Tile_InProcess.Text" xml:space="preserve"><value>In process</value></data>
+  <data name="Tile_Completed.Text" xml:space="preserve"><value>Completed</value></data>
+  <data name="ConnectedSticks.Text" xml:space="preserve"><value>Connected sticks &amp; recent results</value></data>
+  <data name="SelectAll.Content" xml:space="preserve"><value>Select all</value></data>
+  <data name="Refresh.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Refresh connected volumes</value></data>
+  <data name="EmptyTitle.Text" xml:space="preserve"><value>Ready for your USB sticks</value></data>
+  <data name="EmptyDetail.Text" xml:space="preserve"><value>Connect your USB hub. Sticks labeled HIT A01 through HIT D40 will appear here automatically.</value></data>
+  <data name="ShowBackup.Content" xml:space="preserve"><value>Show backup</value></data>
+  <data name="Disconnected.Text" xml:space="preserve"><value>Disconnected</value></data>
+
+  <data name="ChooseFolder" xml:space="preserve"><value>Choose folder</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="ChooseFolderPlaceholder" xml:space="preserve"><value>Choose folder…</value></data>
+  <data name="SticksSelected_One" xml:space="preserve"><value>{0} stick selected</value></data>
+  <data name="SticksSelected_Other" xml:space="preserve"><value>{0} sticks selected</value></data>
+  <data name="Finished" xml:space="preserve"><value>{0} finished · keep sticks connected</value></data>
+  <data name="Header_Processing" xml:space="preserve"><value>Processing</value></data>
+  <data name="Header_Monitoring" xml:space="preserve"><value>Monitoring USB</value></data>
+  <data name="Action_BackUpOnly" xml:space="preserve"><value>Back up only</value></data>
+  <data name="Action_BackUpReset" xml:space="preserve"><value>Back up &amp; reset</value></data>
+  <data name="Action_BackUpFormat" xml:space="preserve"><value>Back up &amp; format</value></data>
+  <data name="Limit_BackupOnly" xml:space="preserve"><value>Up to 16 sticks · backup only</value></data>
+  <data name="Limit_Eject" xml:space="preserve"><value>Up to 16 sticks · automatic ejection</value></data>
+  <data name="Footer_ChooseBackup" xml:space="preserve"><value>Choose a backup directory to begin.</value></data>
+  <data name="Footer_Verified" xml:space="preserve"><value>Backups are verified before any data is deleted.</value></data>
+  <data name="Confirm_BackupTitle_One" xml:space="preserve"><value>Back up {0} stick?</value></data>
+  <data name="Confirm_BackupTitle_Other" xml:space="preserve"><value>Back up {0} sticks?</value></data>
+  <data name="Confirm_ResetTitle_One" xml:space="preserve"><value>Back up and reset {0} stick?</value></data>
+  <data name="Confirm_ResetTitle_Other" xml:space="preserve"><value>Back up and reset {0} sticks?</value></data>
+  <data name="Confirm_BackupOnly" xml:space="preserve"><value>Abgabe and all root files will be copied and verified. Other folders are not backed up. No files on the sticks will be changed. Sticks remain mounted after backup.</value></data>
+  <data name="Confirm_Format" xml:space="preserve"><value>Abgabe and all root files will be copied and verified. Then ALL data on the selected sticks will be deleted by formatting as FAT32. Angabe and Abgabe will be recreated. Other folders are not backed up. Sticks will be ejected automatically after reset. Keep them connected until “Safe to remove” appears. Windows will ask for administrator permission.</value></data>
+  <data name="Confirm_Clear" xml:space="preserve"><value>Abgabe and all root files will be copied and verified. Then ALL data on the selected sticks will be deleted. Angabe and Abgabe will be recreated. Other folders are not backed up. Sticks will be ejected automatically after reset. Keep them connected until “Safe to remove” appears.</value></data>
+
+  <data name="Phase_Todo" xml:space="preserve"><value>To do</value></data>
+  <data name="Phase_Working" xml:space="preserve"><value>In process</value></data>
+  <data name="Phase_Saved" xml:space="preserve"><value>Saved</value></data>
+  <data name="Phase_Reset" xml:space="preserve"><value>Reset</value></data>
+  <data name="Phase_Ejected" xml:space="preserve"><value>Ejected</value></data>
+  <data name="Phase_BackedUp" xml:space="preserve"><value>Backed up</value></data>
+  <data name="Phase_Failed" xml:space="preserve"><value>Needs attention</value></data>
+
+  <data name="Status_ReadyToBackUp" xml:space="preserve"><value>Ready to back up</value></data>
+  <data name="Status_CopyingAndVerifying" xml:space="preserve"><value>Copying and verifying…</value></data>
+  <data name="Status_BackupVerified" xml:space="preserve"><value>Backup verified</value></data>
+  <data name="Status_BackupVerifiedUnchanged" xml:space="preserve"><value>Backup verified • stick unchanged</value></data>
+  <data name="Status_Formatting" xml:space="preserve"><value>Formatting as FAT32…</value></data>
+  <data name="Status_Clearing" xml:space="preserve"><value>Clearing stick…</value></data>
+  <data name="Status_AdministratorPermissionRequired" xml:space="preserve"><value>Administrator permission required…</value></data>
+  <data name="Status_ResetEjecting" xml:space="preserve"><value>Reset complete • ejecting…</value></data>
+  <data name="Status_SafeToRemove" xml:space="preserve"><value>Safe to remove</value></data>
+
+  <data name="Error_SymbolicLink" xml:space="preserve"><value>Symbolic links are not supported: {0}. Stick was not cleared.</value></data>
+  <data name="Error_UnsupportedFile" xml:space="preserve"><value>Unsupported file: {0}</value></data>
+  <data name="Error_VerificationFailed" xml:space="preserve"><value>Verification failed for {0}. Stick was not cleared.</value></data>
+  <data name="Error_FilesChangedDuringBackup" xml:space="preserve"><value>Files changed during backup. No data was deleted.</value></data>
+  <data name="Error_RootChangedDuringBackup" xml:space="preserve"><value>Root directory changed during backup. No data was deleted.</value></data>
+  <data name="Error_FoldersOnStick" xml:space="preserve"><value>Backup and source folders must not be on a HIT stick.</value></data>
+  <data name="Error_BackupInsideSource" xml:space="preserve"><value>The backup directory cannot be inside the assignment source.</value></data>
+  <data name="Error_BackupDirectoryMissing" xml:space="preserve"><value>The backup directory does not exist.</value></data>
+  <data name="Error_SourceDirectoryMissing" xml:space="preserve"><value>The assignment source folder does not exist.</value></data>
+  <data name="Error_LogCreateFailed" xml:space="preserve"><value>Cannot create the operation log in the backup directory.</value></data>
+  <data name="Error_UsbIdentityChanged" xml:space="preserve"><value>The USB device changed. Reconnect the stick and refresh.</value></data>
+  <data name="Error_DeviceChangedBeforeEject" xml:space="preserve"><value>The USB device changed before ejection.</value></data>
+  <data name="Error_DiskOperationFailed" xml:space="preserve"><value>Disk operation failed: {0}</value></data>
+  <data name="Error_AdministratorCancelled" xml:space="preserve"><value>Administrator permission was cancelled; the stick was not formatted.</value></data>
+  <data name="Error_FormatNotRemounted" xml:space="preserve"><value>Formatted, but the volume did not remount. Backup is safe.</value></data>
+  <data name="Error_Fat32TooLarge" xml:space="preserve"><value>Windows can only format volumes up to 32 GB as FAT32. Use clear-files mode for this stick.</value></data>
+  <data name="Error_CleanupIncomplete" xml:space="preserve"><value>Cleanup is incomplete: items remain on the stick.</value></data>
+  <data name="Error_CleanupFailed" xml:space="preserve"><value>Cannot delete {0}: {1}</value></data>
+  <data name="Error_EjectFailed" xml:space="preserve"><value>Ejection failed: {0}</value></data>
+  <data name="Error_ResetButEjectFailed" xml:space="preserve"><value>Backup and reset completed, but ejection failed: {0}</value></data>
+  <data name="Error_EjectedButLogFailed" xml:space="preserve"><value>Stick ejected successfully, but the final log entry failed: {0}</value></data>
+  <data name="Error_OperationAndLogFailed" xml:space="preserve"><value>{0} Log could not be written: {1}</value></data>
+  <data name="Error_IdentityChangedBeforeEject" xml:space="preserve"><value>Reset complete, but device identity changed before ejection.</value></data>
+</root>

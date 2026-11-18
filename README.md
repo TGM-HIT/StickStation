@@ -2,9 +2,10 @@
 
 Back up. Reset. Repeat.
 
-StickStation is a macOS app for preparing classroom USB sticks between assignments. It backs up and verifies submissions, clears or reformats sticks, copies the next assignment, and ejects completed drives automatically. Process up to 16 sticks at once with individual progress and results.
+StickStation is a macOS app for preparing classroom USB sticks between assignments. It backs up and verifies submissions, clears or reformats sticks, copies the next assignment, and ejects completed drives automatically. Process up to 16 sticks at once with individual progress and results. A Windows version (WinUI 3) lives in [`windows/`](windows/); see [Windows version](#windows-version).
 
 [![Release macOS app](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/release-macos.yaml)
+[![Windows build](https://github.com/TGM-HIT/StickStation/actions/workflows/windows-release.yaml/badge.svg)](https://github.com/TGM-HIT/StickStation/actions/workflows/windows-release.yaml)
 
 ## Features
 
@@ -92,3 +93,37 @@ Open the project in Xcode, select the StickStation app scheme and **My Mac** des
 | `StickStation/StickService.swift` | Discovery, backup verification, reset, formatting, ejection, and logging. |
 
 When testing reset or formatting changes, use spare USB sticks with disposable data and the supported volume names.
+
+## Windows version
+
+The Windows app in [`windows/`](windows/) is a WinUI 3 (C#, Windows App SDK, MVVM) port with the same workflow as the macOS app: discovery of mounted removable USB volumes named `HIT <A-D><01-40>`, USB identity checks before destructive operations, batches of up to 16 sticks with per-stick progress, SHA-256-verified backups of `Abgabe` and root-level files into unique per-stick/run folders, an optional assignment source copied into `Angabe`, clear-files or FAT32 reset, a **Back up only** mode, automatic ejection with a "Safe to remove" status, and English/German localization (follows the Windows display language).
+
+Differences from macOS:
+
+- Formatting as FAT32 runs `Format-Volume` and requests administrator permission through UAC (once per stick). Windows can only format volumes up to 32 GB as FAT32; use clear-files mode for larger sticks. Clear-files mode needs no administrator rights.
+- `System Volume Information` and `$RECYCLE.BIN` are left in place instead of the Spotlight folder.
+- Only volumes with a drive letter are supported.
+- Safety rules are identical: the backup directory must not be on a managed stick or inside the assignment source, and symbolic links, junctions and special files are rejected.
+
+Layout:
+
+| Project | Responsibility |
+| --- | --- |
+| `windows/StickStation.Core` | Testable library: backup/verify/reset pipeline, path safety, logging, view models, Windows volume service (WMI, `Format-Volume`, shell eject). |
+| `windows/StickStation.Core.Tests` | xUnit tests using temporary folders and fakes; no real drives are touched. |
+| `windows/StickStation.App` | WinUI 3 app (XAML, `Strings/en-US` and `Strings/de-DE` resources). |
+
+Requirements: Windows 10 1809+ or Windows 11, .NET 10 SDK, and for running the packaged debug build Developer Mode plus the [winapp CLI](https://github.com/microsoft/winappCli).
+
+```powershell
+cd windows
+dotnet test StickStation.Core.Tests                               # unit tests
+dotnet build StickStation.App/StickStation.csproj -p:Platform=x64 # build the app
+winapp run StickStation.App                                       # build and launch with package identity
+
+# Self-contained, unpackaged build (what CI publishes as a zip)
+dotnet publish StickStation.App/StickStation.csproj -c Release -p:Platform=x64 -r win-x64 --self-contained -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true -o publish
+```
+
+The `Windows` workflow (`.github/workflows/windows-release.yaml`) builds, tests and publishes `StickStation-Windows-x64-v<version>.zip` (plus SHA-256 file) as a build artifact, and attaches it to the GitHub Release when a `vX.Y.Z` tag is pushed. Translations live in `windows/StickStation.App/Strings/<language>/Resources.resw`.
+
